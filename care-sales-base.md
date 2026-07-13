@@ -235,7 +235,9 @@ Tickets & Care Pipeline ----\
 Scraped Feeds ---------------+--> Opportunities
 ```
 
-The two Care-side source tables are sources of sales signals.
+Tickets and scraped feeds are the two source tables that can produce sales signals.
+
+Care primarily works tickets. Growth primarily works scraped feeds and target leads.
 
 Opportunities is where Sales manages the actual pipeline. Opportunities should link to a Contact when possible and to an Organization when the account or institution is known.
 
@@ -243,15 +245,36 @@ Opportunities is where Sales manages the actual pipeline. Opportunities should l
 
 ```mermaid
 flowchart LR
-    ORG[Organizations] --> C[Contacts]
-    C[Contacts] --> T[Tickets & Care Pipeline]
-    C --> S[Scraped Feeds]
+    subgraph Shared["Shared CRM"]
+        ORG[Organizations]
+        C[Contacts]
+    end
 
-    T -->|Upsell Potential| O[Opportunities]
-    S -->|Triggered Lead| O
+    subgraph Care["Care"]
+        T[Tickets & Care Pipeline]
+    end
+
+    subgraph Growth["Growth"]
+        S[Scraped Feeds]
+        TL[Target leads in Contacts]
+    end
+
+    subgraph SalesAM["Sales / AM"]
+        O[Opportunities]
+        P[Sales Pipeline]
+    end
+
+    ORG --> C
+    C --> T
+    C --> S
+    C --> TL
+
+    T -->|Care upsell signal| O
+    S -->|Triggered lead| O
+    TL -->|Target lead| O
     ORG --> O
 
-    O --> P[Sales Pipeline]
+    O --> P
     P --> W[Won]
     P --> L[Lost]
     P --> N[Nurture]
@@ -261,21 +284,25 @@ flowchart LR
 
 ### 1. Care Handles the Customer Signal
 
-Care creates or updates one of these records:
+Care creates or updates tickets.
+
+Growth creates or updates lead-development records.
 
 - ticket
 - scraped feed
+- target lead contact
 
-Care fills in the customer context and links the relevant contact.
+Care and Growth fill in customer context and link the relevant contact.
 
-### 2. Care Flags Sales Potential
+### 2. Care Or Growth Flags Sales Potential
 
-Care marks the record as sales-relevant.
+Care or Growth marks the record as sales-relevant.
 
 Examples:
 
 - `upsell potential` is checked on a ticket
 - scraped feed looks like a lead
+- target lead is ready for Sales or AM follow-up
 
 ### 3. Sales Creates or Links an Opportunity
 
@@ -285,6 +312,7 @@ Examples:
 
 - ticket links to opportunity through `opportunities`
 - scraped feed links to opportunity
+- target lead contact links to opportunity
 
 ### 4. Sales Manages the Pipeline
 
@@ -302,26 +330,33 @@ When the Opportunity is finished, Sales marks it as:
 - `Lost`
 - `Nurture`
 
-The source Care record remains as historical customer context.
+The source ticket, scraped feed, or target lead context remains as historical customer context.
 
-## Care to Sales Handoff Flow
+## Signal to Opportunity Flow
 
 ```mermaid
 flowchart TD
-    A[Care receives customer signal] --> B{Sales potential?}
+    A{Signal source}
+    A -->|Care| B[Tickets & Care Pipeline]
+    A -->|Growth| C[Scraped Feeds]
+    A -->|Growth| D[Target lead in Contacts]
 
-    B -->|No| C[Care resolves or records context]
-    B -->|Yes| D[Care flags sales signal]
+    B --> E{Sales potential?}
+    C --> E
+    D --> E
 
-    D --> E[Link Contact and Organization if known]
-    E --> F[Create or link Opportunity]
-    F --> G[Sales reviews context]
-    G --> H[Sales sets stage, owner, value, and next step]
-    H --> I{Outcome}
+    E -->|No| F[Resolve, review, or keep as context]
+    E -->|Yes| G[Flag sales signal]
 
-    I -->|Won| J[Record Won outcome]
-    I -->|Lost| K[Record Lost reason]
-    I -->|Not now| L[Move to Nurture]
+    G --> H[Link Contact and Organization if known]
+    H --> I[Create or link Opportunity]
+    I --> J[Sales / AM reviews context]
+    J --> K[Sales / AM sets stage, owner, value, and next step]
+    K --> L{Outcome}
+
+    L -->|Won| M[Record Won outcome]
+    L -->|Lost| N[Record Lost reason]
+    L -->|Not now| O[Move to Nurture]
 ```
 
 ## Ownership Diagram
@@ -330,7 +365,11 @@ flowchart TD
 flowchart LR
     subgraph Care["Care-Owned Context"]
         T[Tickets & Care Pipeline]
+    end
+
+    subgraph Growth["Growth-Owned Lead Development"]
         S[Scraped Feeds]
+        TL[Target leads in Contacts]
     end
 
     subgraph Shared["Shared CRM"]
@@ -338,19 +377,22 @@ flowchart LR
         C[Contacts]
     end
 
-    subgraph Sales["Sales-Owned Pipeline"]
+    subgraph SalesAM["Sales / AM-Owned Pipeline"]
         O[Opportunities]
     end
 
     ORG --> C
     T --> C
     S --> C
+    TL --> C
 
     T --> ORG
     S --> ORG
+    TL --> ORG
     ORG --> O
     T --> O
     S --> O
+    TL --> O
     O --> C
 ```
 
