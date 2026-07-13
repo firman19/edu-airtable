@@ -503,6 +503,73 @@ This section validates the current Care & Sales Base structure against the opera
 | Email, social, WeChat, WhatsApp, phone | Covered | Store channel details on `Contacts`; use `Preferred Contact Method` for the best next channel. |
 | Separate Target Leads table | Not needed | Target leads are Contacts, not a separate table. Create an Opportunity only when there is a real pipeline item. |
 
+### Post-Build Technical Integration Evaluation
+
+The Airtable base is the operational source of truth for Care, Sales, AM, and Growth lead workflows. The following items are outside the current Airtable-only setup and require Technical Team development.
+
+| Requirement | Current Status | Technical Owner | Notes |
+| --- | --- | --- | --- |
+| EDU Platform -> Airtable user synchronization | Not covered in Airtable-only setup | Technical Team | Airtable has the `Contacts` table, but automatic sync from the EDU platform or Admin Panel is not implemented. |
+| Contact duplicate prevention from platform sync | Not covered in Airtable-only setup | Technical Team | Sync must match on stable identifiers such as platform `User ID` and/or email before creating records. |
+| Existing user detection from scraped email | Partially covered | Technical Team | Airtable has `Cleaned Email`, `Matched Contact`, and `Existing User Cross-Check`; automatic matching still requires integration or automation. |
+| Care intervention notification | Partially covered | Technical Team + Care | Airtable can expose matched records in views, but automatic notification and escalation need automation/integration. |
+| EDU Inbox message trigger | Not covered in Airtable-only setup | Technical Team | Airtable cannot send EDU Inbox messages without an EDU platform integration. |
+| Predefined EDU Inbox templates | Not covered in Airtable-only setup | Technical Team + Care | Message templates and send actions need to be built outside Airtable or through an approved integration. |
+| Intervention history logging | Partially covered | Technical Team | Airtable can store notes/status, but message delivery logs need integration back from EDU Inbox. |
+| Airtable -> Brevo sync | Not covered in Airtable-only setup | Technical Team | Contact status and segmentation sync require Brevo integration. |
+| Brevo -> Airtable sync | Not covered in Airtable-only setup | Technical Team | Email engagement, campaign participation, and last email activity require Brevo integration. |
+| Error handling and monitoring | Not covered in Airtable-only setup | Technical Team | Needs production logging, alerting, retry handling, and maintenance docs. |
+
+Recommended platform-to-Airtable contact mapping:
+
+| EDU Platform | Airtable Contacts |
+| --- | --- |
+| User ID | `Contact ID` or dedicated `Platform User ID` |
+| Full Name | `Full Name` |
+| Email | `Email` |
+| User Type | `User Type` |
+| Account Status | `Platform Status` |
+
+Recommended Airtable-to-Brevo mapping:
+
+| Airtable | Brevo |
+| --- | --- |
+| `Email` | Email address |
+| `User Type` | User type segment/attribute |
+| `Platform Status` | Lifecycle/status segment |
+| `upsell potential` from tickets | Upsell or AM segment signal |
+
+Recommended Brevo-to-Airtable mapping:
+
+| Brevo | Airtable |
+| --- | --- |
+| Email Engagement Status | Email engagement field, future |
+| Campaign Participation | Campaign participation field, future |
+| Last Email Activity | Last email activity field, future |
+
+Technical success criteria:
+
+- New EDU Passport users automatically appear in Airtable.
+- Platform profile updates automatically update Airtable Contacts.
+- Sync does not create duplicate Contacts.
+- Scraped feed emails are automatically matched against active users where possible.
+- Existing-user matches trigger a clear Care intervention workflow.
+- Care agents can trigger approved EDU Inbox messages from their workflow.
+- EDU Inbox message activity is logged back to Airtable or another agreed system of record.
+- Contact status changes synchronize with Brevo.
+- Marketing, Care, and platform user status stay aligned without manual list management.
+
+Technical deliverables:
+
+- system architecture overview
+- integration flow diagrams
+- data mapping document
+- API documentation
+- API connections and automation workflows
+- error handling and logging procedures
+- integration, sync validation, and user acceptance testing
+- production deployment, monitoring setup, and maintenance documentation
+
 ### Current Verdict
 
 The current setup satisfies the minimum Airtable structure for Care, AM, Sales, Growth triggered leads, and Growth target leads.
