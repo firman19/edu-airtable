@@ -24,6 +24,14 @@ Sales owns the commercial follow-up:
 - expected close date
 - won, lost, or nurture outcome
 
+Growth owns lead development:
+
+- triggered lead review
+- target lead research
+- preferred contact method tracking
+- repeat poster follow-up
+- sales categories such as adverts, consulting, sponsorship, and membership
+
 The main operating rule is:
 
 **Care detects signals. Sales manages opportunities.**
@@ -38,6 +46,7 @@ The Care & Sales Base helps the team manage:
 - scraped external leads
 - customer feedback inside tickets
 - upsell signals
+- triggered and target lead follow-up
 - sales and account management opportunities
 
 It is not meant to become a heavy finance, contract, or task-management system. It is the shared place where customer context becomes qualified commercial follow-up.
@@ -64,6 +73,15 @@ Use this table for:
 - existing platform users
 
 Contacts should not become a sales pipeline. A contact can have many tickets, scraped feed matches, and opportunities.
+
+Important Growth-related fields:
+
+- `Email`
+- `Phone / WhatsApp`
+- `WeChat ID`
+- `Social Handle`
+- `Preferred Contact Method`
+- `Lead Source Type`
 
 ### Organizations
 
@@ -106,6 +124,7 @@ Important Sales-related fields:
 
 - `upsell potential`
 - `opportunities`
+- `Sales Handoff Status`
 
 If `upsell potential` is checked, Care is saying: "This ticket may be useful for Sales."
 
@@ -126,6 +145,21 @@ Use this table for:
 
 If a scraped feed looks like a possible lead, link it to an Opportunity.
 
+Important Growth-related fields:
+
+- `Post Type`
+- `Source URL`
+- `Raw Contact Info`
+- `Cleaned Email`
+- `WeChat ID`
+- `WhatsApp`
+- `Social Handle`
+- `Phone`
+- `Repeat Poster Flag`
+- `Existing User Cross-Check`
+- `Sales Handoff Status`
+- `opportunities`
+
 ### Opportunities
 
 Opportunities is the Sales and Account Management pipeline.
@@ -144,6 +178,8 @@ Sales owns these fields:
 
 - stage
 - owner
+- opportunity type
+- lead source type
 - estimated value
 - probability
 - expected close date
@@ -152,6 +188,33 @@ Sales owns these fields:
 - closed date
 - lost reason
 - notes
+
+Use `Opportunity Type` to classify what Sales or Growth is trying to sell:
+
+- `Advert`
+- `Consulting`
+- `Sponsorship`
+- `Membership`
+- `Upsell`
+- `Triggered Lead`
+
+Use `Lead Source Type` to explain where the opportunity came from:
+
+- `Care Upsell`
+- `Triggered Lead`
+- `Target Lead`
+- `Manual Research`
+- `Referral`
+
+Use `Lead Source Type` on Contacts to explain where the lead/contact came from. Use it on Opportunities to explain where the sales opportunity came from.
+
+Use `Preferred Contact Method` on Contacts to identify the best outreach channel:
+
+- `Email`
+- `WeChat`
+- `WhatsApp`
+- `Social Handle`
+- `Phone`
 
 ## Table Relationships
 
@@ -336,17 +399,24 @@ Care uses this to manage:
 - support follow-up
 - upsell signals
 
+### Growth / Lead Management Interface
+
+Growth uses this to manage:
+
+- triggered leads from scraped feeds
+- target leads researched manually
+- contact method review
+- repeat posters
+- existing users who should be prompted back to EDU Passport
+
 ### Sales / Account Management Interface
 
 Sales uses this to manage:
 
 - pipeline board
 - my opportunities
-- care upsell handoffs
-- triggered leads
+- sales handoffs
 - contact context
-- forecast dashboard
-- closed outcomes
 
 ## Simple Example
 
@@ -366,6 +436,84 @@ Sales does this:
 3. Sets stage to `New` or `Qualified`.
 4. Adds next step and expected close date.
 5. Moves the Opportunity through the pipeline.
+
+## Requirements Validation
+
+This section validates the current Care & Sales Base structure against the operating requirements.
+
+### Access And Users
+
+| Requirement | Current Status | Notes |
+| --- | --- | --- |
+| Care Manager access | Covered | Care Manager can use `Care Service Desk`, `Scraped Feeds Review`, and linked CRM context. |
+| Future Care agent access | Covered | Care agents can work from `My Tickets`, `Urgent Tickets`, `Upsell Potential`, and scraped feed review pages. |
+| Growth Manager and Growth agent access | Covered | Growth can use `Growth / Lead Management` for triggered leads, target leads, repeat posters, and contact method review. |
+| Care view-only access to Growth/Sales context | Partially covered | Interfaces expose linked Opportunities and lead context. Airtable permissions still need to be configured in the actual base. |
+| All user levels and user types | Covered in CRM structure | `Contacts.User Type` should classify educator, business, vendor, admin, lead, and other user groups. |
+| Integrated platform behavior | Deferred | Platform sync and behavior-based automation are future integration work. |
+| Social, email marketing, and Brevo integration | Deferred | Brevo and external channel integrations should be added after Airtable workflows are stable. |
+| HR access for GM | Out of scope | HR should remain a separate future setup because of sensitive data. |
+
+### Care, Service, And AM
+
+| Requirement | Current Status | Notes |
+| --- | --- | --- |
+| Care / Service ticketing | Covered | `Tickets & Care Pipeline` is the source of truth for support and service conversations. |
+| Care upsell pipeline | Covered | Use `upsell potential`, `Sales Handoff Status`, and `opportunities` on tickets. |
+| AM paid user care and upsell pipeline | Partially covered | AM can use `Opportunities` with `Opportunity Type = Upsell`. Add paid-user filtered views if needed. |
+| Customer feedback | Covered as ticket field | Keep customer feedback inside `Tickets & Care Pipeline`, not as a separate table. |
+
+### Sales And Growth
+
+| Requirement | Current Status | Notes |
+| --- | --- | --- |
+| Sales: adverts | Covered | Use `Opportunities.Opportunity Type = Advert`. |
+| Sales: consulting | Covered | Use `Opportunities.Opportunity Type = Consulting`. |
+| Sales: sponsorship | Covered | Use `Opportunities.Opportunity Type = Sponsorship`. |
+| Sales: membership | Covered | Use `Opportunities.Opportunity Type = Membership`. |
+| Sales / AM pipeline | Covered | `Opportunities` owns stage, owner, value, probability, close date, next step, and outcome. |
+| Lead source reporting | Covered | Use `Lead Source Type` on `Contacts` and `Opportunities`. |
+
+### Triggered Lead Management
+
+| Requirement | Current Status | Notes |
+| --- | --- | --- |
+| Job posts | Covered | Use `Scraped Feeds.Post Type = Job Post`. |
+| Deal posts | Covered | Use `Scraped Feeds.Post Type = Deal Post`. |
+| Event posts | Covered | Use `Scraped Feeds.Post Type = Event Post`. |
+| Auto and manual scrape | Partially covered | `Scraped Feeds` supports both, but add a scrape/source method field later if reporting needs it. |
+| Raw contact capture | Covered | Use `Raw Contact Info`. |
+| Cleaned email | Covered | Use `Cleaned Email`. |
+| WeChat funnel | Partially covered | Store `WeChat ID`; manual outreach workflow is supported. Automation is deferred. |
+| WhatsApp funnel | Partially covered | Store `WhatsApp`; manual outreach workflow is supported. Automation is deferred. |
+| Social handle funnel | Partially covered | Store `Social Handle`; manual outreach workflow is supported. Automation is deferred. |
+| Phone funnel | Partially covered | Store phone on `Contacts` or `Scraped Feeds`; manual outreach workflow is supported. |
+| Preferred channel | Covered | Use `Contacts.Preferred Contact Method` with Email, WeChat, WhatsApp, Social Handle, or Phone. |
+| Repeat posters | Covered | Use `Repeat Poster Flag` and the Growth `Repeat Posters` page. |
+| Existing user cross-check | Partially covered | Use `Existing User Cross-Check`; automatic matching and EDU Inbox prompts are future automation/integration work. |
+| Prompt Care / EDU Inbox message | Deferred | The base can identify existing users, but sending EDU Inbox prompts requires later integration. |
+
+### Target Lead Management
+
+| Requirement | Current Status | Notes |
+| --- | --- | --- |
+| Educator target leads | Covered | Use `Contacts.User Type = Educator` and `Lead Source Type = Target Lead` or `Manual Research`. |
+| Edu business target leads | Covered | Use `Contacts.User Type = Business` and link to `Organizations` when known. |
+| Vendor target leads | Covered | Use `Contacts.User Type = Vendor` and link to `Organizations` when known. |
+| Email, social, WeChat, WhatsApp, phone | Covered | Store channel details on `Contacts`; use `Preferred Contact Method` for the best next channel. |
+| Separate Target Leads table | Not needed | Target leads are Contacts, not a separate table. Create an Opportunity only when there is a real pipeline item. |
+
+### Current Verdict
+
+The current setup satisfies the minimum Airtable structure for Care, AM, Sales, Growth triggered leads, and Growth target leads.
+
+Remaining gaps are mostly integrations and permissions:
+
+- configure Airtable interface permissions for Care, Growth, Sales/AM, and view-only access
+- automate platform-to-Airtable contact sync later
+- automate Brevo, WhatsApp, social, and EDU Inbox workflows later
+- add scrape method/source reporting later if manual vs automatic scraping becomes important
+- keep HR outside this base and plan it separately
 
 ## Final Mental Model
 

@@ -119,6 +119,10 @@ Show useful fields such as:
 - source URL
 - raw contact info
 - cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
 - matched contact
 - existing user cross-check
 - repeat poster flag
@@ -135,6 +139,10 @@ Show:
 - source URL
 - raw contact info
 - cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
 - matched contact
 - existing user cross-check
 - repeat poster flag
@@ -147,6 +155,10 @@ Show:
 - post type
 - source URL
 - cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
 - matched contact
 - existing user cross-check
 - repeat poster flag
@@ -163,6 +175,10 @@ Show:
 - post type
 - source URL
 - cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
 - matched contact
 - Sales Handoff Status
 - opportunities
@@ -175,6 +191,10 @@ Show all important context:
 - source URL
 - raw contact info
 - cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
 - matched contact
 - existing user cross-check
 - repeat poster flag
@@ -184,9 +204,114 @@ Show all important context:
 
 Interface behavior:
 - Care should be able to review and update Scraped Feeds.
-- Care should clean contact information, link matched contacts, update Sales Handoff Status, and add notes.
+- Care or Growth should clean contact information, link matched contacts, update Sales Handoff Status, and add notes.
 - Opportunities should be visible only as linked sales context.
 - Use the existing linked field “opportunities” if it exists.
+- Do not create duplicate fields.
+- If a suggested field does not exist, skip it instead of creating a new field.
+```
+
+## Growth / Lead Management
+
+```text
+Create an interface named “Growth / Lead Management” for the Care & Sales Base.
+
+Purpose:
+This interface is for Growth to manage triggered leads, target leads, repeat posters, contact method review, and existing users who should be prompted back to EDU Passport.
+
+Use these tables:
+- Scraped Feeds
+- Contacts
+- Organizations
+- Opportunities, for linked sales context only
+
+Keep the interface simple. Create only these pages:
+
+1. Triggered Leads
+Use the Scraped Feeds table.
+Show scraped records from external activity such as job posts, deal posts, and event posts.
+Show:
+- post type
+- source URL
+- raw contact info
+- cleaned email
+- WeChat ID
+- WhatsApp
+- social handle
+- phone
+- matched contact
+- existing user cross-check
+- repeat poster flag
+- Sales Handoff Status
+- opportunities
+- notes
+
+2. Target Leads
+Use the Contacts table.
+Show manually researched or target leads.
+Filter where Lead Source Type is Target Lead or Manual Research, if that field exists.
+Show:
+- Full Name
+- Email
+- Organization
+- User Type
+- Platform Status
+- Phone / WhatsApp
+- WeChat ID
+- Social Handle
+- Preferred Contact Method
+- Lead Source Type
+- Contact Owner
+- Notes
+- linked Opportunities
+
+3. Contact Method Review
+Use the Contacts table.
+Show contacts that need a preferred contact method or have multiple available contact channels.
+Show:
+- Full Name
+- Email
+- Organization
+- Phone / WhatsApp
+- WeChat ID
+- Social Handle
+- Preferred Contact Method
+- Lead Source Type
+- Contact Owner
+- Notes
+- linked Opportunities
+
+4. Repeat Posters
+Use the Scraped Feeds table.
+Filter where Repeat Poster Flag indicates repeat posting.
+Show:
+- post type
+- source URL
+- cleaned email
+- matched contact
+- existing user cross-check
+- repeat poster flag
+- Sales Handoff Status
+- opportunities
+- notes
+
+5. Existing Users to Message
+Use the Scraped Feeds table.
+Filter where Existing User Cross-Check indicates an existing user match.
+Show:
+- post type
+- source URL
+- cleaned email
+- matched contact
+- existing user cross-check
+- notes
+
+Interface behavior:
+- Growth should update `Preferred Contact Method` and `Lead Source Type` on Contacts.
+- Growth should use Contacts for target leads instead of creating a separate Target Leads table.
+- Growth can link or create Opportunities only when a lead becomes sales-ready.
+- Care can view Growth lead context where helpful, but Growth owns lead-source and contact-method fields.
+- Use existing fields only.
 - Do not create duplicate fields.
 - If a suggested field does not exist, skip it instead of creating a new field.
 ```
@@ -220,6 +345,8 @@ Show:
 - Primary Contact
 - Owner
 - Stage
+- Opportunity Type
+- Lead Source Type
 - Estimated Value
 - Probability
 - Expected Close Date
@@ -247,6 +374,8 @@ Show these fields on cards:
 - Opportunity Name
 - Primary Contact
 - Owner
+- Opportunity Type
+- Lead Source Type
 - Estimated Value
 - Expected Close Date
 - Next Step
@@ -280,6 +409,8 @@ Show:
 - Platform Status
 - Phone / WhatsApp
 - WeChat ID
+- Social Handle
+- Preferred Contact Method
 - Contact Owner
 - Notes
 - linked Tickets & Care Pipeline records

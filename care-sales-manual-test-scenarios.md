@@ -9,6 +9,7 @@ The tests validate:
 - table relationships
 - handoff fields
 - Care and Sales interface behavior
+- Growth lead-management behavior
 - native Airtable v1 automations
 - simple guardrails between Care-owned context and Sales-owned pipeline work
 
@@ -16,6 +17,7 @@ The tests validate:
 
 - The base is the `Care & Sales Base`.
 - Sales mainly updates `Opportunities`.
+- Growth mainly updates lead-development fields on `Contacts`, `Scraped Feeds`, and `Opportunities`.
 - Care mainly updates `Tickets & Care Pipeline` and `Scraped Feeds`.
 - `Sales Handoff Status` exists on Care-side source tables.
 - `opportunities` is the existing linked-record field from Care source tables to `Opportunities`.
@@ -36,6 +38,41 @@ The tests validate:
 | `Won` | Customer agreed or converted. |
 | `Lost` | Opportunity is closed unsuccessfully. |
 | `Nurture` | Not ready now, but worth keeping warm. |
+
+## Opportunity Type Options
+
+`Opportunities.Opportunity Type` should use these options:
+
+| Type | Meaning |
+| --- | --- |
+| `Advert` | Paid advertising opportunity. |
+| `Consulting` | Consulting or advisory opportunity. |
+| `Sponsorship` | Sponsorship opportunity. |
+| `Membership` | Membership or subscription opportunity. |
+| `Upsell` | Expansion or upgrade from an existing user or account. |
+| `Triggered Lead` | Opportunity created from scraped external activity. |
+
+## Lead Source Type Options
+
+`Lead Source Type` should use these options on `Contacts` and `Opportunities`:
+
+| Source | Meaning |
+| --- | --- |
+| `Care Upsell` | Came from a Care ticket or support conversation. |
+| `Triggered Lead` | Came from scraped external activity. |
+| `Target Lead` | Manually researched or identified by Growth. |
+| `Manual Research` | Created from manual prospecting. |
+| `Referral` | Came from a referral. |
+
+## Preferred Contact Method Options
+
+`Contacts.Preferred Contact Method` already exists and should use these options:
+
+- `Email`
+- `WeChat`
+- `WhatsApp`
+- `Social Handle`
+- `Phone`
 
 ## Care Interfaces
 
@@ -93,6 +130,26 @@ Primary tables:
 - `Contacts`
 - `Tickets & Care Pipeline` for handoff context only
 - `Scraped Feeds` for handoff context only
+
+## Growth Interface
+
+### Growth / Lead Management
+
+Use this interface for Growth-owned lead review and outreach follow-up.
+
+Recommended pages:
+
+- `Triggered Leads`
+- `Target Leads`
+- `Repeat Posters`
+- `Existing Users to Message`
+
+Primary tables:
+
+- `Scraped Feeds`
+- `Contacts`
+- `Organizations`
+- `Opportunities`
 
 ## Automation Views To Verify
 
@@ -414,6 +471,107 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
+### 10. Opportunity Type and Lead Source Classification
+
+**Purpose:** Confirm Growth and Sales can classify opportunities by sales category and lead source.
+
+**Interface to test from:** `Sales / Account Management` -> `Pipeline Board`
+
+**Starting table:** `Opportunities`
+
+**Setup data:**
+
+- Create or choose an Opportunity.
+- Link a Contact.
+- Link an Organization if known.
+
+**Steps:**
+
+1. Open the Opportunity.
+2. Set `Opportunity Type` to one of `Advert`, `Consulting`, `Sponsorship`, `Membership`, `Upsell`, or `Triggered Lead`.
+3. Set `Lead Source Type` to one of `Care Upsell`, `Triggered Lead`, `Target Lead`, `Manual Research`, or `Referral`.
+4. Save the Opportunity.
+
+**Expected result:**
+
+- Opportunity saves with the selected `Opportunity Type`.
+- Opportunity saves with the selected `Lead Source Type`.
+- Opportunity remains visible in Sales pipeline views.
+- Reporting can group opportunities by type and source.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 11. Triggered Lead Contact Method Review
+
+**Purpose:** Confirm Growth can review scraped lead contact channels and update the matched Contact's preferred contact method.
+
+**Interface to test from:** `Growth / Lead Management` -> `Triggered Leads`
+
+**Starting table:** `Scraped Feeds`
+
+**Setup data:**
+
+- Create or choose a scraped feed record.
+- Set `Post Type` to `Job Post`, `Deal Post`, or `Event Post`.
+- Fill at least one contact channel such as `Cleaned Email`, `WeChat ID`, `WhatsApp`, `Social Handle`, or `Phone`.
+
+**Steps:**
+
+1. Open the scraped feed in `Triggered Leads`.
+2. Review the available contact channels.
+3. Link or create the matched Contact if known.
+4. On the matched Contact, set `Preferred Contact Method`.
+5. Add notes or create/link an Opportunity if the lead becomes sales-ready.
+
+**Expected result:**
+
+- Scraped feed stores the raw lead context and available contact channels.
+- Matched Contact links back to the scraped feed when known.
+- Contact stores the preferred contact method.
+- Growth can identify which channel to use next from the Contact.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 12. Target Lead Tracking
+
+**Purpose:** Confirm Growth can track manually researched target leads without creating a separate Target Leads table.
+
+**Interface to test from:** `Growth / Lead Management` -> `Target Leads`
+
+**Starting table:** `Contacts`
+
+**Setup data:**
+
+- Create or choose a Contact.
+- Set user type to educator, business, or vendor.
+- Fill at least one outreach channel such as email, social handle, WeChat, WhatsApp, or phone.
+
+**Steps:**
+
+1. Set `Lead Source Type` to `Target Lead` or `Manual Research`.
+2. Set `Preferred Contact Method`.
+3. Link the Contact to an Organization if known.
+4. Create or link an Opportunity if the lead becomes sales-ready.
+
+**Expected result:**
+
+- Contact appears in `Target Leads`.
+- Contact has a usable outreach channel.
+- Contact has a preferred contact method.
+- No duplicate target lead table is needed.
+- Opportunity is created only when Sales/Growth has something to manage.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
 ## Final Sign-Off
 
 Use this section after all tests are complete.
@@ -428,6 +586,9 @@ Use this section after all tests are complete.
 | Overdue reminder automation |  |  |
 | Closed opportunity cleanup |  |  |
 | Duplicate prevention |  |  |
+| Opportunity categorization |  |  |
+| Triggered lead contact method review |  |  |
+| Target lead tracking |  |  |
 
 Reviewer:
 
