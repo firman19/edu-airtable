@@ -12,6 +12,7 @@ The tests validate:
 - Growth lead-management behavior
 - native Airtable v1 automations
 - simple guardrails between Care-owned context and Sales-owned pipeline work
+- future technical integration acceptance criteria
 
 ## Assumptions
 
@@ -22,7 +23,8 @@ The tests validate:
 - `Sales Handoff Status` exists on Care-side source tables.
 - `opportunities` is the existing linked-record field from Care source tables to `Opportunities`.
 - Airtable automations are native Airtable automations only.
-- External integrations such as Brevo, WhatsApp, EDU Inbox, and platform sync are not part of these tests.
+- External integrations such as Brevo, WhatsApp, EDU Inbox, and platform sync are not part of the Airtable v1 tests.
+- Future technical integration tests are acceptance checks only and are not expected to pass until the technical team builds the integrations.
 
 ## Opportunity Stage Options
 
@@ -572,9 +574,238 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
+## Future Technical Integration Acceptance Tests
+
+These scenarios validate the post-build technical integrations described in `care-sales-base.md`.
+
+They are not required for the current Airtable-only v1 setup. Use them after the technical team connects the EDU platform, EDU Inbox, and Brevo to Airtable.
+
+### 13. EDU Platform to Airtable Contact Sync
+
+**Purpose:** Confirm EDU Passport user records automatically sync into Airtable Contacts.
+
+**Interface to test from:** Airtable `Contacts` table, plus the EDU Passport admin/user system.
+
+**Starting table:** `Contacts`
+
+**Setup data:**
+
+- Create or choose a test user in EDU Passport.
+- Confirm the user has User ID, full name, email, user type, and account status.
+- Confirm no matching Airtable Contact exists yet.
+
+**Steps:**
+
+1. Trigger or wait for the platform-to-Airtable sync.
+2. Open the Airtable `Contacts` table.
+3. Search by the user's email or platform user ID.
+4. Compare synced fields against the EDU Passport source record.
+
+**Expected result:**
+
+- One new Contact is created in Airtable.
+- Platform user ID maps to Airtable `Contact ID` or a dedicated platform ID field.
+- Full name, email, user type, and platform status match the EDU Passport record.
+- No manual import or export is needed.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 14. Duplicate Prevention During Platform Sync
+
+**Purpose:** Confirm platform sync updates existing Contacts instead of creating duplicate records.
+
+**Interface to test from:** Airtable `Contacts` table, plus the EDU Passport admin/user system.
+
+**Starting table:** `Contacts`
+
+**Setup data:**
+
+- Choose an existing Airtable Contact that matches an EDU Passport user by platform user ID or email.
+- Change a profile field in EDU Passport, such as full name, user type, or account status.
+
+**Steps:**
+
+1. Trigger or wait for the platform-to-Airtable sync.
+2. Search Airtable Contacts by email and platform user ID.
+3. Review the existing Contact record.
+
+**Expected result:**
+
+- The existing Contact is updated.
+- No duplicate Contact is created.
+- Changed platform fields are reflected in Airtable.
+- Existing linked tickets, scraped feeds, and opportunities remain attached to the same Contact.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 15. Existing User Detection from Scraped Feeds
+
+**Purpose:** Confirm Airtable can detect when a scraped external post belongs to an existing active EDU user.
+
+**Interface to test from:** `Growth / Lead Management` -> `Existing Users to Message`
+
+**Starting table:** `Scraped Feeds`
+
+**Setup data:**
+
+- Create or choose an active Contact synced from EDU Passport.
+- Create a scraped feed record with `Cleaned Email` matching that Contact.
+- Fill post context such as post type and source URL.
+
+**Steps:**
+
+1. Trigger or wait for the matching workflow.
+2. Open the scraped feed record.
+3. Review the matched Contact.
+4. Open `Existing Users to Message`.
+
+**Expected result:**
+
+- Scraped feed is matched to the existing Contact.
+- Existing user cross-check indicates a match.
+- Record appears in `Existing Users to Message`.
+- Care or Growth can clearly see that intervention is required.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 16. EDU Inbox Message Trigger and Logging
+
+**Purpose:** Confirm Care or Growth can send a predefined EDU Inbox reminder from the Airtable workflow and retain communication history.
+
+**Interface to test from:** `Growth / Lead Management` -> `Existing Users to Message`
+
+**Starting table:** `Scraped Feeds`
+
+**Setup data:**
+
+- Choose a scraped feed matched to an active EDU user.
+- Confirm the record is marked as requiring intervention.
+- Confirm an approved EDU Inbox message template exists.
+
+**Steps:**
+
+1. Trigger the `Send EDU Reminder` action from the Airtable workflow.
+2. Confirm the message is delivered in EDU Inbox.
+3. Return to Airtable and review the source scraped feed or linked Contact.
+
+**Expected result:**
+
+- EDU Inbox message is sent without manual copy/paste.
+- Message template is used correctly.
+- Message activity is logged in Airtable or the connected communication history.
+- Intervention status updates clearly after sending.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 17. Airtable to Brevo Segmentation Sync
+
+**Purpose:** Confirm Airtable contact status changes update Brevo marketing segments.
+
+**Interface to test from:** Airtable `Contacts` table, plus Brevo.
+
+**Starting table:** `Contacts`
+
+**Setup data:**
+
+- Choose a Contact with an email address.
+- Confirm the Contact exists or can be created in Brevo.
+- Note the current Brevo list or segment membership.
+
+**Steps:**
+
+1. Update Airtable fields used for segmentation, such as `User Type` or `Platform Status`.
+2. Trigger or wait for the Airtable-to-Brevo sync.
+3. Open Brevo and review the contact's segment membership.
+
+**Expected result:**
+
+- Brevo receives the updated Airtable contact fields.
+- Contact is added to the correct marketing segment.
+- Contact is removed from segments that no longer apply.
+- No manual list management is needed.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 18. Brevo to Airtable Engagement Sync
+
+**Purpose:** Confirm Brevo engagement data syncs back into Airtable for Care, Growth, and Sales context.
+
+**Interface to test from:** Airtable `Contacts` table, plus Brevo.
+
+**Starting table:** `Contacts`
+
+**Setup data:**
+
+- Choose a Contact with an email address.
+- Confirm the Contact has Brevo activity, such as campaign participation or last email activity.
+
+**Steps:**
+
+1. Trigger or wait for the Brevo-to-Airtable sync.
+2. Open the Contact in Airtable.
+3. Review email engagement fields.
+
+**Expected result:**
+
+- Airtable shows Brevo engagement context.
+- Campaign participation and last email activity are visible if those fields exist.
+- Synced marketing context helps Care, Growth, and Sales understand recent communication.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
+### 19. Integration Error Handling and Monitoring
+
+**Purpose:** Confirm failed technical integrations produce visible errors and can be recovered safely.
+
+**Interface to test from:** Airtable integration monitoring view, automation logs, or the technical team's monitoring dashboard.
+
+**Starting table:** Any connected table
+
+**Setup data:**
+
+- Choose a non-production test record.
+- Prepare a controlled failure case, such as invalid email, missing required platform ID, or temporarily disabled test credential.
+
+**Steps:**
+
+1. Trigger the integration with the controlled failure.
+2. Review the integration log or monitoring dashboard.
+3. Correct the source issue.
+4. Retry or wait for the recovery workflow.
+
+**Expected result:**
+
+- Failure is logged with enough detail to diagnose the issue.
+- Failed records do not create duplicates.
+- Corrected records can sync successfully.
+- Care, Growth, Sales, or the technical team can see when manual attention is required.
+
+**Result:**
+
+- [ ] Pass
+- [ ] Fail
+
 ## Final Sign-Off
 
-Use this section after all tests are complete.
+Use this section after all Airtable v1 tests are complete.
 
 | Area | Result | Notes |
 | --- | --- | --- |
@@ -589,6 +820,24 @@ Use this section after all tests are complete.
 | Opportunity categorization |  |  |
 | Triggered lead contact method review |  |  |
 | Target lead tracking |  |  |
+
+Reviewer:
+
+Date:
+
+## Future Integration Sign-Off
+
+Use this section only after the technical integrations are built.
+
+| Area | Result | Notes |
+| --- | --- | --- |
+| EDU Platform to Airtable Contact sync |  |  |
+| Platform sync duplicate prevention |  |  |
+| Existing user detection from scraped feeds |  |  |
+| EDU Inbox message trigger and logging |  |  |
+| Airtable to Brevo segmentation sync |  |  |
+| Brevo to Airtable engagement sync |  |  |
+| Integration error handling and monitoring |  |  |
 
 Reviewer:
 
