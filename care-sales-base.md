@@ -4,14 +4,14 @@
 
 The Care & Sales Base is the shared customer lifecycle base for EDU Passport.
 
-It connects Care, support, scraped market signals, customer feedback, and Sales / Account Management in one place so the team can see the full customer journey without duplicating contacts or losing handoff context.
+It connects Care, support, scraped market signals, ticket feedback, and Sales / Account Management in one place so the team can see the full customer journey without duplicating contacts or losing handoff context.
 
 Care owns the customer signal:
 
 - support tickets
 - upsell potential
 - scraped external leads
-- customer feedback
+- customer feedback inside tickets
 - customer satisfaction and service context
 
 Sales owns the commercial follow-up:
@@ -36,7 +36,7 @@ The Care & Sales Base helps the team manage:
 
 - customer support and service issues
 - scraped external leads
-- customer feedback
+- customer feedback inside tickets
 - upsell signals
 - sales and account management opportunities
 
@@ -63,7 +63,7 @@ Use this table for:
 - leads
 - existing platform users
 
-Contacts should not become a sales pipeline. A contact can have many tickets, feedback records, scraped feed matches, and opportunities.
+Contacts should not become a sales pipeline. A contact can have many tickets, scraped feed matches, and opportunities.
 
 ### Organizations
 
@@ -80,7 +80,7 @@ Use this table for:
 
 Organizations should not become the sales pipeline. It gives account-level context.
 
-One Organization can have many Contacts, tickets, feedback records, scraped feed matches, and opportunities.
+One Organization can have many Contacts, tickets, scraped feed matches, and opportunities.
 
 Example:
 
@@ -126,20 +126,6 @@ Use this table for:
 
 If a scraped feed looks like a possible lead, link it to an Opportunity.
 
-### Customer Feedback
-
-Customer Feedback stores customer comments, satisfaction signals, complaints, requests, and buying intent.
-
-Use this table when feedback shows:
-
-- interest in premium features
-- expansion potential
-- renewal risk
-- dissatisfaction that Sales or Account Management should know about
-- customer demand from a school, company, or vendor
-
-If feedback becomes commercially relevant, link it to an Opportunity.
-
 ### Opportunities
 
 Opportunities is the Sales and Account Management pipeline.
@@ -150,7 +136,6 @@ An Opportunity may come from:
 
 - a Care ticket
 - a scraped feed
-- customer feedback
 - a referral
 - manual Sales entry
 - an existing customer conversation
@@ -176,7 +161,6 @@ Organizations ----------> Contacts
       |                     v
       |              Tickets & Care Pipeline ----\
       |              Scraped Feeds ---------------+--> Opportunities
-      |              Customer Feedback ----------/
       |                                            ^
       +--------------------------------------------+
 ```
@@ -186,10 +170,9 @@ Contacts and Organizations are shared CRM context.
 ```text
 Tickets & Care Pipeline ----\
 Scraped Feeds ---------------+--> Opportunities
-Customer Feedback ----------/
 ```
 
-The three Care-side tables are sources of sales signals.
+The two Care-side source tables are sources of sales signals.
 
 Opportunities is where Sales manages the actual pipeline. Opportunities should link to a Contact when possible and to an Organization when the account or institution is known.
 
@@ -200,11 +183,9 @@ flowchart LR
     ORG[Organizations] --> C[Contacts]
     C[Contacts] --> T[Tickets & Care Pipeline]
     C --> S[Scraped Feeds]
-    C --> F[Customer Feedback]
 
     T -->|Upsell Potential| O[Opportunities]
     S -->|Triggered Lead| O
-    F -->|Buying Intent or Risk| O
     ORG --> O
 
     O --> P[Sales Pipeline]
@@ -221,7 +202,6 @@ Care creates or updates one of these records:
 
 - ticket
 - scraped feed
-- customer feedback
 
 Care fills in the customer context and links the relevant contact.
 
@@ -233,7 +213,6 @@ Examples:
 
 - `upsell potential` is checked on a ticket
 - scraped feed looks like a lead
-- feedback shows buying intent
 
 ### 3. Sales Creates or Links an Opportunity
 
@@ -243,7 +222,6 @@ Examples:
 
 - ticket links to opportunity through `opportunities`
 - scraped feed links to opportunity
-- customer feedback links to opportunity
 
 ### 4. Sales Manages the Pipeline
 
@@ -290,7 +268,6 @@ flowchart LR
     subgraph Care["Care-Owned Context"]
         T[Tickets & Care Pipeline]
         S[Scraped Feeds]
-        F[Customer Feedback]
     end
 
     subgraph Shared["Shared CRM"]
@@ -305,15 +282,12 @@ flowchart LR
     ORG --> C
     T --> C
     S --> C
-    F --> C
 
     T --> ORG
     S --> ORG
-    F --> ORG
     ORG --> O
     T --> O
     S --> O
-    F --> O
     O --> C
 ```
 
@@ -323,7 +297,7 @@ flowchart LR
 
 - support issue
 - customer complaint
-- feedback details
+- customer feedback field on tickets
 - scraped source URL
 - raw contact info
 - resolution note
@@ -359,7 +333,6 @@ Care uses this to manage:
 
 - tickets
 - scraped feeds
-- customer feedback
 - support follow-up
 - upsell signals
 
@@ -371,7 +344,6 @@ Sales uses this to manage:
 - my opportunities
 - care upsell handoffs
 - triggered leads
-- feedback opportunities
 - contact context
 - forecast dashboard
 - closed outcomes

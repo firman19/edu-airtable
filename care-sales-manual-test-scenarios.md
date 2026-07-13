@@ -16,7 +16,7 @@ The tests validate:
 
 - The base is the `Care & Sales Base`.
 - Sales mainly updates `Opportunities`.
-- Care mainly updates `Tickets & Care Pipeline`, `Scraped Feeds`, and `Customer Feedback`.
+- Care mainly updates `Tickets & Care Pipeline` and `Scraped Feeds`.
 - `Sales Handoff Status` exists on Care-side source tables.
 - `opportunities` is the existing linked-record field from Care source tables to `Opportunities`.
 - Airtable automations are native Airtable automations only.
@@ -74,24 +74,6 @@ Primary tables:
 - `Contacts`
 - `Opportunities` for linked sales context only
 
-### Customer Feedback Review
-
-Use this interface for reviewing customer comments, satisfaction signals, buying intent, and churn risk.
-
-Recommended pages:
-
-- `New Feedback`
-- `Needs Review`
-- `Ready for Sales`
-- `Reviewed Feedback`
-- `Feedback Detail`
-
-Primary tables:
-
-- `Customer Feedback`
-- `Contacts`
-- `Opportunities` for linked sales context only
-
 ## Sales Interface
 
 ### Sales / Account Management
@@ -111,7 +93,6 @@ Primary tables:
 - `Contacts`
 - `Tickets & Care Pipeline` for handoff context only
 - `Scraped Feeds` for handoff context only
-- `Customer Feedback` for handoff context only
 
 ## Automation Views To Verify
 
@@ -121,7 +102,6 @@ Create dedicated automation views before testing automations.
 | --- | --- | --- |
 | `Tickets & Care Pipeline` | `AUTOMATION - Sales Ready Ticket Upsells` | Tickets ready to become opportunities. |
 | `Scraped Feeds` | `AUTOMATION - Sales Ready Scraped Feeds` | Scraped leads ready to become opportunities. |
-| `Customer Feedback` | `AUTOMATION - Sales Ready Customer Feedback` | Feedback records ready to become opportunities. |
 | `Opportunities` | `AUTOMATION - Overdue Next Steps` | Open opportunities with overdue follow-up. |
 | `Opportunities` | `Lost Opportunities Missing Lost Reason` | Closed lost opportunities missing reason. |
 
@@ -203,45 +183,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 3. Customer Feedback Handoff to Opportunity
-
-**Purpose:** Confirm sales-relevant customer feedback can become a linked Sales opportunity.
-
-**Interface to test from:** `Customer Feedback Review` -> `Ready for Sales`
-
-**Starting table:** `Customer Feedback`
-
-**Setup data:**
-
-- Create or choose a `Contact`.
-- Create customer feedback that shows buying intent, expansion potential, or renewal risk.
-- Link the feedback to the contact.
-- Set `Sales Handoff Status` to `Ready for Sales`.
-- Leave `opportunities` empty.
-
-**Steps:**
-
-1. Save the feedback record.
-2. Confirm it appears in `AUTOMATION - Sales Ready Customer Feedback`.
-3. Run or wait for the native automation.
-4. Open the created Opportunity.
-5. Open the source feedback record again.
-
-**Expected result:**
-
-- One new Opportunity is created.
-- Opportunity `Stage` is `New`.
-- Opportunity source is `Customer Feedback`.
-- Opportunity links to the same contact.
-- Feedback `opportunities` links to the new Opportunity.
-- Feedback `Sales Handoff Status` becomes `Handoff Created`.
-
-**Result:**
-
-- [ ] Pass
-- [ ] Fail
-
-### 4. Sales Owner Daily Workflow from My Opportunities
+### 3. Sales Owner Daily Workflow from My Opportunities
 
 **Purpose:** Confirm Sales can use `My Opportunities` as a daily work queue.
 
@@ -278,7 +220,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 5. Overdue Next Step Reminder View
+### 4. Overdue Next Step Reminder View
 
 **Purpose:** Confirm overdue opportunities enter the automation view for reminders.
 
@@ -312,7 +254,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 6. Won Opportunity Cleanup
+### 5. Won Opportunity Cleanup
 
 **Purpose:** Confirm won opportunities are closed cleanly.
 
@@ -343,7 +285,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 7. Lost Opportunity with Missing Lost Reason
+### 6. Lost Opportunity with Missing Lost Reason
 
 **Purpose:** Confirm lost opportunities without a reason are visible for cleanup.
 
@@ -376,7 +318,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 8. Rejected Sales Handoff
+### 7. Rejected Sales Handoff
 
 **Purpose:** Confirm Sales can reject a Care handoff without creating pipeline noise.
 
@@ -386,7 +328,7 @@ Create dedicated automation views before testing automations.
 
 **Setup data:**
 
-- Create or choose a ticket, scraped feed, or feedback record.
+- Create or choose a ticket or scraped feed record.
 - Set `Sales Handoff Status` to `Ready for Sales`.
 - Leave `opportunities` empty.
 
@@ -409,7 +351,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 9. Contact Context Review
+### 8. Contact Context Review
 
 **Purpose:** Confirm Sales can review customer context before outreach.
 
@@ -426,7 +368,7 @@ Create dedicated automation views before testing automations.
 1. Open the `Sales / Account Management` interface.
 2. Open `Contact Context`.
 3. Open the contact record.
-4. Review linked tickets, scraped feeds, feedback records, and opportunities.
+4. Review linked tickets, scraped feeds, and opportunities.
 
 **Expected result:**
 
@@ -440,7 +382,7 @@ Create dedicated automation views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 10. Duplicate Opportunity Prevention
+### 9. Duplicate Opportunity Prevention
 
 **Purpose:** Confirm automations do not create duplicate opportunities from the same source record.
 
@@ -450,7 +392,7 @@ Create dedicated automation views before testing automations.
 
 **Setup data:**
 
-- Create or choose a ticket, scraped feed, or feedback record.
+- Create or choose a ticket or scraped feed record.
 - Set `Sales Handoff Status` to `Ready for Sales`.
 - Link an existing Opportunity in `opportunities`.
 
@@ -483,7 +425,6 @@ Use this section after all tests are complete.
 | Sales interface |  |  |
 | Ticket handoff automation |  |  |
 | Scraped feed handoff automation |  |  |
-| Customer feedback handoff automation |  |  |
 | Overdue reminder automation |  |  |
 | Closed opportunity cleanup |  |  |
 | Duplicate prevention |  |  |

@@ -191,96 +191,6 @@ Interface behavior:
 - If a suggested field does not exist, skip it instead of creating a new field.
 ```
 
-## Customer Feedback Review
-
-```text
-Create an interface named “Customer Feedback Review” for the Care & Sales Base.
-
-Purpose:
-This interface is for the Care team to review customer feedback, identify satisfaction issues, buying intent, expansion potential, renewal risk, and feedback that should be handed to Sales as an opportunity.
-
-Use these tables:
-- Customer Feedback
-- Contacts
-- Opportunities, for linked sales context only
-
-Keep the interface simple. Create only these pages:
-
-1. New Feedback
-Use the Customer Feedback table.
-Show newly submitted feedback that needs first review.
-Show useful fields such as:
-- associated contact
-- feedback type
-- satisfaction rating
-- feedback text
-- created date
-- assigned agent
-- Sales Handoff Status
-- opportunities
-- notes
-
-2. Needs Review
-Use the Customer Feedback table.
-Show feedback that still needs Care review, triage, or follow-up.
-Include records where the feedback is not resolved, not reviewed, or does not yet have a clear next action, if those fields exist.
-Show:
-- associated contact
-- feedback type
-- satisfaction rating
-- feedback text
-- assigned agent
-- Sales Handoff Status
-- opportunities
-- notes
-
-3. Ready for Sales
-Use the Customer Feedback table.
-Filter where Sales Handoff Status is Ready for Sales.
-This page should show feedback that indicates buying intent, expansion potential, or renewal risk.
-Show:
-- associated contact
-- feedback type
-- satisfaction rating
-- feedback text
-- Sales Handoff Status
-- opportunities
-- notes
-
-4. Reviewed Feedback
-Use the Customer Feedback table.
-Show feedback that has already been reviewed, resolved, handed off, accepted, rejected, or linked to an opportunity.
-Show:
-- associated contact
-- feedback type
-- satisfaction rating
-- feedback text
-- Sales Handoff Status
-- opportunities
-- notes
-
-5. Feedback Detail
-Create a record detail or record review page for Customer Feedback.
-Show all important context:
-- associated contact
-- feedback type
-- satisfaction rating
-- feedback text
-- created date
-- assigned agent
-- Sales Handoff Status
-- opportunities
-- notes
-
-Interface behavior:
-- Care should be able to review and update Customer Feedback.
-- Care should identify whether feedback needs follow-up, resolution, or Sales handoff.
-- Opportunities should be visible only as linked sales context.
-- Use the existing linked field “opportunities” if it exists.
-- Do not create duplicate fields.
-- If a suggested field does not exist, skip it instead of creating a new field.
-```
-
 ## Sales / Account Management
 
 ```text
@@ -297,7 +207,6 @@ Use these tables:
 - Contacts
 - Tickets & Care Pipeline, for handoff context only
 - Scraped Feeds, for handoff context only
-- Customer Feedback, for handoff context only
 
 Keep the interface simple. Create only these pages:
 
@@ -349,7 +258,6 @@ Create a page that helps Sales review records handed off from Care.
 Show sales-ready records from these source tables if possible:
 - Tickets & Care Pipeline where Sales Handoff Status is Ready for Sales or upsell potential is checked
 - Scraped Feeds where Sales Handoff Status is Ready for Sales
-- Customer Feedback where Sales Handoff Status is Ready for Sales
 
 Show useful fields from source records:
 - associated contact or matched contact
@@ -376,7 +284,6 @@ Show:
 - Notes
 - linked Tickets & Care Pipeline records
 - linked Scraped Feeds
-- linked Customer Feedback
 - linked Opportunities
 
 Interface behavior:
