@@ -92,6 +92,27 @@ Primary tables:
 - `Contacts`
 - `Opportunities` for linked sales context only
 
+## Sales Interface
+
+### Sales / Account Management
+
+Use this interface for Sales-owned pipeline work and Care handoff review.
+
+Recommended pages:
+
+- `My Opportunities`
+- `Pipeline Board`
+- `Sales Handoffs`
+- `Contact Context`
+
+Primary tables:
+
+- `Opportunities`
+- `Contacts`
+- `Tickets & Care Pipeline` for handoff context only
+- `Scraped Feeds` for handoff context only
+- `Customer Feedback` for handoff context only
+
 ## Automation Views To Verify
 
 Create dedicated automation views before testing automations.
@@ -261,7 +282,7 @@ Create dedicated automation views before testing automations.
 
 **Purpose:** Confirm overdue opportunities enter the automation view for reminders.
 
-**Interface to test from:** `Sales / Account Management` -> `Overdue Follow-Ups`, plus the `AUTOMATION - Overdue Next Steps` table view.
+**Interface to test from:** `Sales / Account Management` -> `My Opportunities`, plus the `AUTOMATION - Overdue Next Steps` table view.
 
 **Starting table:** `Opportunities`
 
@@ -295,7 +316,7 @@ Create dedicated automation views before testing automations.
 
 **Purpose:** Confirm won opportunities are closed cleanly.
 
-**Interface to test from:** `Sales / Account Management` -> `Pipeline Board` and `Closed Outcomes`
+**Interface to test from:** `Sales / Account Management` -> `Pipeline Board`
 
 **Starting table:** `Opportunities`
 
@@ -315,7 +336,7 @@ Create dedicated automation views before testing automations.
 - Opportunity `Stage` is `Won`.
 - `Closed Date` is filled with today's date.
 - Opportunity no longer appears in open pipeline views.
-- Opportunity appears in `Closed Outcomes`.
+- Opportunity appears in the closed stage area of `Pipeline Board`.
 
 **Result:**
 
@@ -326,7 +347,7 @@ Create dedicated automation views before testing automations.
 
 **Purpose:** Confirm lost opportunities without a reason are visible for cleanup.
 
-**Interface to test from:** `Sales / Account Management` -> `Closed Outcomes`, plus the `Lost Opportunities Missing Lost Reason` table view.
+**Interface to test from:** `Sales / Account Management` -> `Pipeline Board`, plus the `Lost Opportunities Missing Lost Reason` table view.
 
 **Starting table:** `Opportunities`
 
@@ -359,7 +380,7 @@ Create dedicated automation views before testing automations.
 
 **Purpose:** Confirm Sales can reject a Care handoff without creating pipeline noise.
 
-**Interface to test from:** `Sales / Account Management` handoff page for the relevant source, then confirm from the matching Care interface.
+**Interface to test from:** `Sales / Account Management` -> `Sales Handoffs`, then confirm from the matching Care interface.
 
 **Starting table:** Any Care source table
 
@@ -392,7 +413,7 @@ Create dedicated automation views before testing automations.
 
 **Purpose:** Confirm Sales can review customer context before outreach.
 
-**Interface to test from:** `Sales / Account Management` -> `Contacts & Account Context`
+**Interface to test from:** `Sales / Account Management` -> `Contact Context`
 
 **Starting table:** `Contacts`
 
@@ -403,7 +424,7 @@ Create dedicated automation views before testing automations.
 **Steps:**
 
 1. Open the `Sales / Account Management` interface.
-2. Open `Contacts & Account Context`.
+2. Open `Contact Context`.
 3. Open the contact record.
 4. Review linked tickets, scraped feeds, feedback records, and opportunities.
 

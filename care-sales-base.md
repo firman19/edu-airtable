@@ -65,6 +65,30 @@ Use this table for:
 
 Contacts should not become a sales pipeline. A contact can have many tickets, feedback records, scraped feed matches, and opportunities.
 
+### Organizations
+
+Organizations stores schools, businesses, vendors, partners, and other institutions.
+
+Use this table for:
+
+- schools
+- companies
+- vendors
+- partners
+- key accounts
+- institutions with multiple contacts
+
+Organizations should not become the sales pipeline. It gives account-level context.
+
+One Organization can have many Contacts, tickets, feedback records, scraped feed matches, and opportunities.
+
+Example:
+
+- Organization: Bright Future School
+- Contacts: principal, teacher, admin staff
+- Opportunities: premium plan discussion, renewal, expansion
+- Tickets: support issues from staff at that school
+
 ### Tickets & Care Pipeline
 
 Tickets & Care Pipeline stores support and service conversations.
@@ -147,6 +171,19 @@ Sales owns these fields:
 ## Table Relationships
 
 ```text
+Organizations ----------> Contacts
+      |                     |
+      |                     v
+      |              Tickets & Care Pipeline ----\
+      |              Scraped Feeds ---------------+--> Opportunities
+      |              Customer Feedback ----------/
+      |                                            ^
+      +--------------------------------------------+
+```
+
+Contacts and Organizations are shared CRM context.
+
+```text
 Tickets & Care Pipeline ----\
 Scraped Feeds ---------------+--> Opportunities
 Customer Feedback ----------/
@@ -154,12 +191,13 @@ Customer Feedback ----------/
 
 The three Care-side tables are sources of sales signals.
 
-Opportunities is where Sales manages the actual pipeline.
+Opportunities is where Sales manages the actual pipeline. Opportunities should link to a Contact when possible and to an Organization when the account or institution is known.
 
 ## Workflow Diagram
 
 ```mermaid
 flowchart LR
+    ORG[Organizations] --> C[Contacts]
     C[Contacts] --> T[Tickets & Care Pipeline]
     C --> S[Scraped Feeds]
     C --> F[Customer Feedback]
@@ -167,6 +205,7 @@ flowchart LR
     T -->|Upsell Potential| O[Opportunities]
     S -->|Triggered Lead| O
     F -->|Buying Intent or Risk| O
+    ORG --> O
 
     O --> P[Sales Pipeline]
     P --> W[Won]
@@ -233,7 +272,7 @@ flowchart TD
     B -->|No| C[Care resolves or records context]
     B -->|Yes| D[Care flags sales signal]
 
-    D --> E[Link Contact]
+    D --> E[Link Contact and Organization if known]
     E --> F[Create or link Opportunity]
     F --> G[Sales reviews context]
     G --> H[Sales sets stage, owner, value, and next step]
@@ -255,6 +294,7 @@ flowchart LR
     end
 
     subgraph Shared["Shared CRM"]
+        ORG[Organizations]
         C[Contacts]
     end
 
@@ -262,10 +302,15 @@ flowchart LR
         O[Opportunities]
     end
 
+    ORG --> C
     T --> C
     S --> C
     F --> C
 
+    T --> ORG
+    S --> ORG
+    F --> ORG
+    ORG --> O
     T --> O
     S --> O
     F --> O
