@@ -2,7 +2,7 @@
 
 # Milestone 2 Target Schema Checklist
 
-Source: `docs/EDU_Airtable_Product_Blueprint.xlsm`
+Source: `../docs/EDU_Airtable_Product_Blueprint.xlsm`
 
 This checklist adapts the Product blueprint to the Operations Hub decisions:
 - Do not create a separate `Product Tasks` table. Use shared `Tasks` with Product/Product-Tech context.
@@ -144,6 +144,7 @@ Purpose: These are optional fields to add to the existing shared `Tasks` table. 
 - `Release Owner` on Releases: do not add; release ownership can be handled through workflow or notes for now.
 - `Related Release` on Tasks: do not add; use QA/Release-side links when needed.
 - `Dependencies` on Tasks: do not add in this phase.
+- `Parent Task` on Tasks: allowed for lightweight subtasks only; do not use it as dependency management.
 - Release back-links to Projects, Tasks, and Bugs: do not add in this phase; use existing links from those records when needed.
 
 ## Milestone 2 Completion Checklist

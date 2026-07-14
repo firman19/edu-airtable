@@ -6,6 +6,11 @@ The Care & Sales Base is the shared customer lifecycle base for EDU Passport.
 
 It connects Care, support, scraped market signals, ticket feedback, and Sales / Account Management in one place so the team can see the full customer journey without duplicating contacts or losing handoff context.
 
+Companion docs:
+
+- [Manual Test Scenarios](manual-test-scenarios.md)
+- [Airtable AI Prompts](airtable-ai-prompts.md)
+
 Care owns the customer signal:
 
 - support tickets

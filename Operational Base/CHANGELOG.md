@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.21
+Lightweight subtasks added
+- Added `Parent Task` self-link and `Subtasks` backlink guidance for the shared `Tasks` table
+- Added helper fields for task level, completion flag, subtask counts, and subtask progress
+- Clarified that subtasks remain normal project-linked Tasks and support only one nesting level
+- Updated interface guidance for My Tasks, Projects, and Manager Dashboard
+
 ## v0.20
 Executive Dashboard page layouts added
 - Added page-by-page layout guidance for Executive Overview, Projects Health, Tasks And Blockers, Product Snapshot, Care Snapshot, and Releases And Changelog

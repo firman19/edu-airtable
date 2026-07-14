@@ -8,7 +8,7 @@ Goal: Create the shared CRM and work-management foundation before adding departm
 
 Todo:
 - [x] Confirm the base name is `EDU Passport Operations Hub`.
-- [x] Compare existing Airtable fields against `field-requirements.md`.
+- [x] Compare existing Airtable fields against [field-requirements.md](field-requirements.md).
 - [x] Create or verify `Departments`.
 - [x] Create or verify `Roadmaps`.
 - [x] Create or verify `Projects`.
@@ -33,7 +33,7 @@ Done Criteria:
 
 Goal: Build Product intake, triage, bug, QA, release, and changelog workflows while keeping execution in shared Tasks.
 
-Reference: product-field-requirements.md.
+Reference: [product-field-requirements.md](product-field-requirements.md).
 
 Todo:
 - [x] Create `Product Requests`.
@@ -65,7 +65,7 @@ Done Criteria:
 Goal: Build Care support, customer lifecycle, upsell, and triggered-lead workflows using shared CRM records.
 
 Todo:
-- [x] Compare existing Airtable fields against `care-field-requirements.md`.
+- [x] Compare existing Airtable fields against [care-field-requirements.md](care-field-requirements.md).
 - [x] Create `Care Tickets`.
 - [x] Create `Scraped Listing`.
 - [x] Link `Care Tickets` to `Contacts`.

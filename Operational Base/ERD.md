@@ -16,6 +16,8 @@ Roadmaps ---------------------> Projects ----------------------> Tasks
              v                     v                      v              v
         Campaigns               Content                 Sprints   Creative Requests
 
+Tasks -- Parent Task self-link --> Tasks / Subtasks
+
 Organizations ---------> Contacts
         |                         |
         v                         v
@@ -47,6 +49,7 @@ Organizations ---------> Contacts
 - Projects (1) -> Creative Requests (N)
 - Projects (1) -> Product Requests (N, optional)
 - Projects (1) -> Bugs & Issues (N, optional)
+- Tasks (1) -> Tasks (N, optional subtasks through Parent Task)
 - Organizations (1) -> Contacts (N)
 - Organizations (1) -> Care Tickets (N, optional)
 - Contacts (1) -> Care Tickets (N)
@@ -67,15 +70,18 @@ Organizations ---------> Contacts
 3. One shared Contacts table is the CRM identity source of truth.
 4. Every Task must belong to one Project.
 5. Projects are the main container for initiatives.
-6. Product Tasks are filtered records inside shared Tasks.
-7. Care Contacts are records inside shared Contacts.
-8. Product owns triage, priority, roadmap decisions, bugs, QA, releases, and changelog wording.
-9. Care owns Care Tickets, Scraped Listing, and contact support details.
-10. Interfaces provide workflow guardrails by role.
-11. Use Airtable collaborator/user fields directly for owners and assignees.
-12. Team Members is deferred unless staff metadata or manager hierarchy becomes necessary.
-13. Opportunities is deferred until Sales/Account Management workflow is ready.
-14. HR and Finance are planned as separate Airtable setups later.
+6. Subtasks are regular Tasks linked to a parent task through `Parent Task`.
+7. Subtasks still require a Project and can have their own owner, status, priority, and due date.
+8. Use only one subtask level by default: task -> subtask.
+9. Product Tasks are filtered records inside shared Tasks.
+10. Care Contacts are records inside shared Contacts.
+11. Product owns triage, priority, roadmap decisions, bugs, QA, releases, and changelog wording.
+12. Care owns Care Tickets, Scraped Listing, and contact support details.
+13. Interfaces provide workflow guardrails by role.
+14. Use Airtable collaborator/user fields directly for owners and assignees.
+15. Team Members is deferred unless staff metadata or manager hierarchy becomes necessary.
+16. Opportunities is deferred until Sales/Account Management workflow is ready.
+17. HR and Finance are planned as separate Airtable setups later.
 
 ## Tables
 

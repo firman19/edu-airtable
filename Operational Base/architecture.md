@@ -8,6 +8,7 @@ One shared base connects CRM, project management, task execution, Product workfl
 
 ```text
 Roadmaps -> Projects -> Tasks
+Tasks -> Subtasks through a self-link in Tasks
 CRM records -> Requests / Tickets -> Projects / Tasks
 Product Requests -> Projects / Tasks -> Bugs / QA -> Releases -> Changelog
 Care Tickets -> Contacts / Organizations -> Tasks
@@ -57,9 +58,12 @@ Opportunities is deferred for a later Sales/Account Management milestone. For no
 
 ## Business Rules
 - One shared Tasks table for all execution work.
+- Subtasks are records in the shared Tasks table, linked through `Parent Task`.
 - One shared Contacts table for CRM identity.
 - Every Task belongs to one Project.
+- Every subtask belongs to one Project.
 - Projects are the main container for initiatives.
+- Support only one subtask level by default; use task -> subtask, not deep nesting.
 - Product work uses shared Tasks, not a separate Product Tasks table.
 - Care uses shared Contacts, not a separate Care Contacts table.
 - Marketing uses Campaigns and Content.

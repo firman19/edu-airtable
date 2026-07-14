@@ -1,41 +1,16 @@
-# EDU Passport Operations Hub
+# EDU Airtable Documentation
 
-## Purpose
-Build a company-wide Airtable hub for CRM, project management, task management, and cross-department operations.
+This repository documents two Airtable bases for EDU Passport.
 
-## Base Strategy
-- Workspace: one EDU Passport workspace.
-- Main base: EDU Passport Operations Hub.
-- HR and Finance: planned as separate Airtable setups later because they may contain sensitive employee, payroll, budget, and financial records.
+## Bases
 
-## Current Status
-- Database: Redesigning for shared CRM + PM structure
-- Core Interfaces: In Progress
-- Automations: Started
-- Reporting: Planned
-- AI Integration: Planned
+- [Operational Base](Operational%20Base/README.md): company-wide operations hub for shared CRM, projects, tasks, Product, Marketing, Care operations, and management reporting.
+- [Care & Sales Base](Care%20%26%20Sales%20Base/README.md): customer lifecycle base for Care, Growth, Sales, Account Management, opportunities, and sales handoffs.
 
-## Resume Context
-Current Phase: Milestone 4 - Interfaces And Access Guardrails
+## Source Materials
 
-Next:
-- Create focused Airtable interfaces for each team
-- Review existing Executive Dashboard, My Tasks, Projects, and Marketing Interface
-- Add Product, Care, QA, Release, Changelog, Scraped Listing, and Manager views
-- Use interfaces as workflow guardrails for role-specific editing
+The `docs/` folder contains original source materials and blueprints used to design the Airtable structures.
 
-Constraints:
-- Paid Airtable features are acceptable when they improve interface and permission design.
-- Prefer native automations first.
-- Use workflow guardrails, not strict data isolation.
+## AI Working Instructions
 
-Read Order:
-1. AGENTS.md
-2. architecture.md
-3. ERD.md
-4. implementation.md
-5. milestones.md
-6. field-requirements.md
-7. product-field-requirements.md
-8. care-field-requirements.md
-9. interface-requirements.md
+`AGENTS.md` contains the working instructions for AI assistants collaborating on this documentation.

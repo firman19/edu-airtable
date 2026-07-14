@@ -221,6 +221,7 @@ Use these as process/interface rules even if Airtable plan limits prevent strict
 | Care Tickets | Care owns ticket priority, status, owner, notes, and upsell potential. |
 | Scraped Listing | Care owns cleaned email, matched contact, cross-check result, and review notes. |
 | Tasks | Assignees update their own task progress; managers/product/care leads review filtered boards. |
+| Subtasks | Subtasks stay in shared `Tasks`; use `Parent Task` for one-level nesting and avoid separate subtask tables. |
 
 ## Detailed Interface Requirements
 
@@ -328,16 +329,20 @@ Key fields to show:
 - `Priority`
 - `Start Date`
 - `Due Date`
+- `Task Level`
+- `Parent Task`
 - `Description`
 - `Attachments`
 
 Filters:
 - `Owner` is current Airtable user where possible.
 - Exclude done/archived tasks from the default open view.
+- Include both parent tasks and subtasks assigned to the current user.
 
 Guardrails:
 - Staff should update `Status`, `Description`, and attachments as needed.
 - Project, Department, and CRM links should usually be edited by leads/managers.
+- Create subtasks only when separate ownership, dates, status, or reporting are needed.
 
 ### Projects
 
@@ -372,10 +377,13 @@ Key fields to show:
 Filters:
 - Hide archived projects by default.
 - Allow grouping by `Department`, `Roadmap`, and `Owner`.
+- In task sections, group parent tasks by `Status` and show subtasks in the task detail panel.
 
 Guardrails:
 - Every task should remain linked to a project.
 - Avoid creating tasks directly from unrelated places unless the project link is filled.
+- Subtasks should still link to the same project as their parent task unless there is a clear cross-project reason.
+- Do not create deeper nesting below one parent task level.
 
 ### Marketing Interface
 
@@ -789,10 +797,12 @@ Required sections:
 
 Key fields to show:
 - Department, owner, status, priority, due dates, and linked records needed to drill into work.
+- Include `Task Level`, `Parent Task`, `Subtask Count`, and `Subtask Progress` where useful for task health.
 
 Filters:
 - Hide archived records.
 - Show active/open records by default.
+- Optionally group or filter Tasks by `Task Level`.
 
 Guardrails:
 - Managers should be able to inspect and follow up, but daily editing should happen in team-specific interfaces.

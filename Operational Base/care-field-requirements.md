@@ -3,8 +3,8 @@
 # Milestone 3 Target Schema Checklist
 
 Sources:
-- `docs/Airtable_ Care Department Blueprint.docx`
-- `docs/Airtable_ Care Department Blueprint.pdf`
+- `../docs/Airtable_ Care Department Blueprint.docx`
+- `../docs/Airtable_ Care Department Blueprint.pdf`
 
 This checklist adapts the Care blueprint to the Operations Hub decisions:
 - Do not create a separate Care Contacts table. Use shared `Contacts`.

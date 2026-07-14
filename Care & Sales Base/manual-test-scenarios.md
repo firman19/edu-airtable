@@ -576,7 +576,7 @@ Create dedicated automation views before testing automations.
 
 ## Future Technical Integration Acceptance Tests
 
-These scenarios validate the post-build technical integrations described in `care-sales-base.md`.
+These scenarios validate the post-build technical integrations described in [README.md](README.md).
 
 They are not required for the current Airtable-only v1 setup. Use them after the technical team connects the EDU platform, EDU Inbox, and Brevo to Airtable.
 

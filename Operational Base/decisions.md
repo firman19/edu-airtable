@@ -78,3 +78,9 @@ Reason: They gather internal team requests and issue reports; CRM links should o
 
 026. Product task fields are additions to shared Tasks, not a new table.
 Reason: Product execution must remain part of the shared company task system.
+
+027. Implement subtasks through a self-link in the shared Tasks table.
+Reason: Subtasks need execution ownership and reporting, but a separate Subtasks table would duplicate the task system.
+
+028. Support only one subtask level by default.
+Reason: Task -> subtask is enough for execution tracking, while deep nesting makes Airtable views, rollups, and ownership reporting harder to maintain.

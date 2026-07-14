@@ -167,7 +167,21 @@ Purpose: One shared execution table for all departments.
 | Created | Created time | No | Audit field. | Present |
 | Last Update | Last modified time | No | Audit field. | Present |
 | Related Contact | Linked record to Contacts | No | Person-level CRM context. | Present |
+| Parent Task | Linked record to Tasks | No | Self-link for one-level subtasks. Limit to one linked parent task. | Missing |
+| Subtasks | Linked records to Tasks | Auto/backlink | Reciprocal field from `Parent Task`; shows child tasks under a parent task. | Missing |
+| Task Level | Formula | No | Formula: `IF({Parent Task}, "Subtask", "Task")`. Use for grouping/filtering. | Missing |
+| Task Complete Flag | Formula | No | Formula: `IF({Status} = "Done", 1, 0)`. Used by parent task progress rollups. | Missing |
+| Subtask Count | Count | No | Count linked records in `Subtasks`. | Missing |
+| Completed Subtask Count | Rollup | No | Roll up `Subtasks -> Task Complete Flag` with `SUM(values)`. | Missing |
+| Subtask Progress | Formula | No | Formula: `IF({Subtask Count} = 0, BLANK(), {Completed Subtask Count} / {Subtask Count})`; format as percent. | Missing |
 | Blocker Reason | Long text | No | Not needed. Use `Description` for blocker notes when needed. | Remove / Later |
+
+Subtask rules:
+- Subtasks are normal records in `Tasks`, not a separate table.
+- Every subtask must still have a `Project`.
+- Use `Parent Task` only for one level of nesting: task -> subtask.
+- A subtask may have its own `Owner`, `Status`, `Priority`, `Start Date`, and `Due Date`.
+- Keep tiny checklist items inside `Description`; create subtasks only when separate ownership, dates, status, or reporting are needed.
 
 ## Organizations
 
@@ -238,3 +252,4 @@ Do not create this table in Milestone 1. Use Care Tickets.Upsell Potential and S
 - [x] Owner/assignee fields use Airtable collaborator/user fields directly.
 - [x] Team Members table is not created for Milestone 1.
 - [x] Opportunities table is not created for Milestone 1.
+- [ ] Tasks support one-level subtasks through `Parent Task` and `Subtasks`.
