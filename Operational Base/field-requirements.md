@@ -93,7 +93,7 @@ Purpose: Stores the company departments used to classify roadmaps, projects, tas
 
 | Field | Type | Required Now | Notes | Audit Result |
 | --- | --- | --- | --- | --- |
-| Department Name | Single line text | Yes | Primary field. Examples: Marketing, Sales, Product, Care, Operations, Leadership. | Present |
+| Department Name | Single line text | Yes | Primary field. Examples: Marketing, Sales, Product, Care, Operations, AI & Automation, Leadership. | Present |
 | Department Lead | Collaborator / Airtable user | No | Person accountable for the department. | Present |
 | Status | Single select | Yes | Options: Active, Inactive. | Present |
 | Description | Long text | No | Short explanation of department scope. | Present |
@@ -189,10 +189,10 @@ Purpose: Shared CRM table for organizations such as schools, businesses, vendors
 
 Function:
 - Groups multiple Contacts under one organization.
-- Connects Sales/Account Management opportunities to the organization.
+- Provides organization context for Care, Product, and sanitized handoffs to the separate Care & Sales Base.
 - Lets Care and Product see organization-level context instead of only individual people.
 - Supports reporting by school, business, vendor, partner, or key account.
-- Prevents duplicate organization names being scattered across Tasks, Tickets, Product Requests, and future opportunity records.
+- Prevents duplicate organization names from being scattered across Operations Hub Tasks, Tickets, and Product Requests.
 
 Example:
 - `Organization`: Bright Future School
@@ -231,11 +231,11 @@ Purpose: Shared CRM identity table for people across Care, Product, Sales, and G
 | Notes | Long text | No | Relationship/support context. | Present |
 | Care Tickets | Linked records to Care Tickets | Later/backlink | Add in Milestone 3. | Present |
 
-## Deferred: Opportunities
+## Not In The Operations Hub: Opportunities
 
-Purpose: Later Sales/Account Management pipeline for sales, upsell, account management, triggered lead, and revenue opportunities.
+Purpose: Sales, upsell, account management, triggered-lead, and revenue pipeline implemented in the separate Care & Sales Base.
 
-Do not create this table in Milestone 1. Use Care Tickets.Upsell Potential and Scraped Listing for now.
+Do not create this table in the Operations Hub. Use `Care Tickets.Upsell Potential` and `Scraped Listing` for Operations Hub signals, then hand qualified work to the Care & Sales Base.
 
 ## Milestone 1 Completion Checklist
 
@@ -252,4 +252,4 @@ Do not create this table in Milestone 1. Use Care Tickets.Upsell Potential and S
 - [x] Owner/assignee fields use Airtable collaborator/user fields directly.
 - [x] Team Members table is not created for Milestone 1.
 - [x] Opportunities table is not created for Milestone 1.
-- [ ] Tasks support one-level subtasks through `Parent Task` and `Subtasks`.
+- [x] Tasks support one-level subtasks through `Parent Task` and `Subtasks`.

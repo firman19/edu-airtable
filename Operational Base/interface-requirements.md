@@ -27,22 +27,22 @@ Milestone 4 should stay simple and fit Airtable Free Plan limits where possible.
 
 | Interface | Primary Users | Main Tables | Required Views / Sections | Milestone 4 Status |
 | --- | --- | --- | --- | --- |
-| Care Service Desk | Care | Care Tickets, Contacts, Organizations, Tasks | Open tickets, urgent tickets, my tickets, resolved tickets, upsell potential. | To Build |
-| Scraped Listing Review | Care | Scraped Listing, Contacts | New listings, matched contacts, no match yet, repeat posters, intervention notes. | To Build |
-| Product Request Submission | All teams | Product Requests | Simple submission form/page with limited editable fields. | To Build |
-| Product Triage | Product | Product Requests, Product Areas, Projects, Tasks | New requests, accepted requests, not planned, by product area, by priority. | To Build |
-| Engineering / Product Task Board | Product/Tech | Tasks, Projects, Sprints, Product Areas | Product/engineering tasks grouped by status, owner, sprint, and product area. | To Build |
-| Bug Queue | Product/Tech | Bugs & Issues, Tasks, QA & Testing | New bugs, high severity, in progress, fixed, QA needed, released. | To Build |
-| QA Dashboard | Product/QA | QA & Testing, Bugs & Issues, Releases, Tasks | Not started, failed, blocked, passed, by release. | To Build |
-| Release Dashboard | Product | Releases, QA & Testing, Changelog | Planning, QA, ready, released, changelog needed. | To Build |
-| Changelog View | Product/Care/Marketing | Changelog, Releases | Internal notes, user-facing messages, published date. | To Build |
-| Manager Dashboard | Managers | Projects, Tasks, Product Requests, Care Tickets, Releases | Cross-department status, overdue work, priority work, blockers, release/care summary. | To Build |
+| Care Service Desk | Care | Care Tickets, Contacts, Organizations, Tasks | Open tickets, urgent tickets, my tickets, resolved tickets, upsell potential. | Complete |
+| Scraped Listing Review | Care | Scraped Listing, Contacts | New listings, matched contacts, no match yet, repeat posters, intervention notes. | Complete |
+| Product Request Submission | All teams | Product Requests | Simple submission form/page with limited editable fields. | Complete |
+| Product Triage | Product | Product Requests, Product Areas, Projects, Tasks | New requests, accepted requests, not planned, by product area, by priority. | Complete |
+| Engineering / Product Task Board | Product/Tech | Tasks, Projects, Sprints, Product Areas | Product/engineering tasks grouped by status, owner, sprint, and product area. | Complete |
+| Bug Queue | Product/Tech | Bugs & Issues, Tasks, QA & Testing | New bugs, high severity, in progress, fixed, QA needed, released. | Complete |
+| QA Dashboard | Product/QA | QA & Testing, Bugs & Issues, Releases, Tasks | Not started, failed, blocked, passed, by release. | Complete |
+| Release Dashboard | Product | Releases, QA & Testing, Changelog | Planning, QA, ready, released, changelog needed. | Complete |
+| Changelog View | Product/Care/Marketing | Changelog, Releases | Internal notes, user-facing messages, published date. | Complete |
+| Manager Dashboard | Managers | Projects, Tasks, Product Requests, Care Tickets, Releases | Cross-department status, overdue work, priority work, blockers, release/care summary. | Complete |
 
-## Deferred Interface
+## Sales / Account Management Handoff
 
-| Interface | Reason |
+| Interface | Implementation |
 | --- | --- |
-| Sales / Account Management View | Defer until Opportunities or a clearer Sales/AM pipeline exists. For now, use `Care Tickets.Upsell Potential` view/filter. |
+| Sales / Account Management | The Operations Hub Upsell Potential handoff view is complete. Full Opportunities and pipeline interfaces are complete in the separate Care & Sales Base. |
 
 ## Interface Builder Map
 
@@ -202,12 +202,12 @@ Use this section when Airtable asks you to add a page, choose a layout, then cho
 
 ### Sales / Account Management View
 
-Status: Deferred.
+Status: Complete through the Operations Hub handoff view and the separate Care & Sales Base pipeline interfaces.
 
-| Page | Layout | Source Table |
+| Page | Layout | Source |
 | --- | --- | --- |
-| Upsell Potential | List / Grid | `Care Tickets` |
-
+| Upsell Potential Handoff | List / Grid | Operations Hub `Care Tickets` |
+| Sales Pipeline | List / Grid | Care & Sales Base `Opportunities` |
 ## Access Guardrails
 
 Use these as process/interface rules even if Airtable plan limits prevent strict field-level permissions:
@@ -501,7 +501,7 @@ Editable fields:
 
 Guardrails:
 - Care manually fills `Matched Contact` for now.
-- Automated email matching is deferred to Milestone 5 or later integrations.
+- The native existing-contact intervention queue is complete. Deeper platform matching remains Milestone 9 integration work.
 
 ### Product Request Submission
 
@@ -707,7 +707,7 @@ Filters:
 
 Guardrails:
 - QA results should update `QA Status`, `Actual`, `Result`, and `Tested Date`.
-- Failed QA should remain visible for Milestone 5 automation.
+- Failed QA remains visible and feeds the completed QA failure alert.
 
 ### Release Dashboard
 
@@ -809,29 +809,27 @@ Guardrails:
 
 ### Sales / Account Management View
 
-Status: Deferred for now.
+Status: Complete.
 
-Current substitute:
-- Create a filtered view or section for `Care Tickets` where `Upsell Potential` is checked.
-
-Reason:
-- `Opportunities` is deferred until Sales/Account Management workflow is defined.
-
+Implementation:
+- The Operations Hub provides a filtered `Care Tickets` handoff view where `Upsell Potential` is checked.
+- The separate Care & Sales Base provides the full Opportunities pipeline and Sales / Account Management interfaces.
+- Do not create a duplicate Opportunities table in the Operations Hub.
 ## Milestone 4 Completion Checklist
 
-- [ ] Existing interfaces reviewed.
-- [ ] Care Service Desk exists.
-- [ ] Scraped Listing Review exists.
-- [ ] Product Request Submission exists.
-- [ ] Product Triage exists.
-- [ ] Engineering / Product Task Board exists.
-- [ ] Bug Queue exists.
-- [ ] QA Dashboard exists.
-- [ ] Release Dashboard exists.
-- [ ] Changelog View exists.
-- [ ] Manager Dashboard exists.
-- [ ] Sales / Account Management View is deferred or replaced with Upsell Potential view.
-- [ ] Non-Product users have a simple request submission path.
-- [ ] Care users have a daily service desk path.
-- [ ] Managers can see cross-department work without raw-table cleanup.
-- [ ] Interfaces use filtered views and field visibility as guardrails.
+- [x] Existing interfaces reviewed.
+- [x] Care Service Desk exists.
+- [x] Scraped Listing Review exists.
+- [x] Product Request Submission exists.
+- [x] Product Triage exists.
+- [x] Engineering / Product Task Board exists.
+- [x] Bug Queue exists.
+- [x] QA Dashboard exists.
+- [x] Release Dashboard exists.
+- [x] Changelog View exists.
+- [x] Manager Dashboard exists.
+- [x] Sales / Account Management handoff view exists, with the full pipeline in the Care & Sales Base.
+- [x] Non-Product users have a simple request submission path.
+- [x] Care users have a daily service desk path.
+- [x] Managers can see cross-department work without raw-table cleanup.
+- [x] Interfaces use filtered views and field visibility as guardrails.

@@ -1,5 +1,47 @@
 # Changelog
 
+## v0.25
+Portfolio documentation moved to repository root
+- Moved architecture, ERD, decisions, implementation, milestones, changelog, and corporate-functions requirements out of `Operational Base/`
+- Kept `Operational Base/` focused on Operations Hub-specific build docs
+- Added root portfolio documentation links and read order
+- Updated Operational Base, People & HR, and Finance & Administration links to the root corporate-functions requirements
+- Confirmed Operations and AI & Automation guidance remains centralized in the root corporate-functions requirements
+
+## v0.24
+Company-wide budget planning and actuals model added
+- Replaced the flat Budget Tracking design with Budget Plans, Budget Categories, and monthly Budget Lines
+- Set USD as the company budget reporting currency
+- Added monthly Department x Category planning with derived quarterly, annual, and YTD reporting
+- Added summarized monthly accounting actuals, commitments, forecasts, variances, reconciliation, and locking
+- Added controlled Budget Change requests that preserve approved baselines
+- Added simplified Finance Request Portal, Budget Workspace, and Finance Admin interface requirements
+- Simplified Finance starter automations to a daily admin digest and monthly-close reminder
+- Documented all-department approved-budget visibility and controlled shared editing
+- Updated Milestone 8, implementation, architecture, ERD, and decisions
+
+## v0.23
+Dedicated corporate-service base folders added
+- Added a self-contained People & HR Base folder and README
+- Added a self-contained Finance & Administration Base folder and README
+- Moved each restricted base's detailed schema, interfaces, access rules, workflow, and acceptance tests into its own folder
+- Reduced the corporate-functions document to cross-base routing plus Operations and AI & Automation requirements
+- Updated repository navigation, milestone references, architecture, ERD, and implementation links
+- Confirmed that Operations and AI & Automation remain in the Operations Hub
+
+## v0.22
+Corporate functions milestone started
+- Marked Milestones 4 through 7 complete
+- Recorded the Sales / Account Management pipeline as completed in the separate Care & Sales Base
+- Confirmed that Opportunities must not be duplicated in the Operations Hub
+- Moved Corporate Functions, Operations, and AI & Automation to Milestone 8 and marked it current
+- Moved Future Integrations to Milestone 9
+- Added the Milestone 8 routing matrix, minimum schemas, access boundaries, and validation checklist
+- Added Operations and AI & Automation to the shared Operations Hub architecture
+- Added the restricted People & HR and Finance & Administration base model
+- Confirmed authoritative external systems and no cross-base synchronization at launch
+- Updated README, implementation status, architecture, decisions, ERD, and AI working instructions
+
 ## v0.21
 Lightweight subtasks added
 - Added `Parent Task` self-link and `Subtasks` backlink guidance for the shared `Tasks` table
