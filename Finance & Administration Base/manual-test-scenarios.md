@@ -9,7 +9,7 @@ The tests validate:
 - request intake and review
 - monthly budget planning and rollups
 - budget-change formulas and rollups
-- summarized actuals and month-close workflow
+- simple actual-spend entry and over-budget visibility
 - compliance and renewal tracking
 - native Airtable MVP automations
 - privacy and no-sync guardrails
@@ -18,8 +18,8 @@ The tests validate:
 
 - The base is `EDU Passport Finance & Administration`.
 - The MVP uses one small approved internal operator group.
-- Accounting, banking, tax, and secure document systems remain authoritative outside Airtable.
-- Airtable stores summarized monthly actuals, workflow status, metadata, references, and access-controlled URLs only.
+- Accounting integration is deferred; banking, tax, and secure document systems remain authoritative outside Airtable.
+- Airtable stores planning data, simple actual-spend amounts, workflow status, metadata, references, and access-controlled URLs only.
 - Airtable does not store transaction-level accounting records, bank details, credentials, payment attachments, payroll, or unrestricted identity/legal documents.
 - Airtable automations are native Airtable automations only.
 - No cross-base sync is enabled.
@@ -35,7 +35,6 @@ Recommended pages:
 - `New Request`
 - `Request List`
 - `Request Detail`
-- `Budget Change Request`
 
 Primary tables:
 
@@ -61,12 +60,11 @@ Primary tables:
 
 ### Finance Admin
 
-Use this interface for request review, month close, compliance, and budget setup.
+Use this interface for request review, compliance, and budget setup.
 
 Recommended pages:
 
 - `Request Review`
-- `Month Close`
 - `Compliance & Renewals`
 - `Budget Setup`
 
@@ -75,7 +73,6 @@ Primary tables:
 - `Finance Requests`
 - `Budget Plans`
 - `Budget Categories`
-- `Budget Lines`
 - `Compliance & Renewals`
 
 ## Automation Views To Verify
@@ -87,7 +84,6 @@ Create or verify these table views before testing automations.
 | `Finance Requests` | `AUTOMATION - Submitted Or In Review Requests` | Requests that should appear in the daily digest. |
 | `Budget Plans` | `AUTOMATION - Submitted Budget Plans` | Submitted plans that need review. |
 | `Budget Lines` | `AUTOMATION - Over Budget Lines` | Budget lines that should appear in the daily digest. |
-| `Budget Lines` | `AUTOMATION - Prior Month Open Close` | Prior-month lines still Open or Pending Reconciliation. |
 | `Compliance & Renewals` | `AUTOMATION - Due Or Overdue Compliance` | Compliance items due soon or overdue. |
 
 ## Manual Test Scenarios
@@ -196,33 +192,31 @@ Create or verify these table views before testing automations.
 - [ ] Pass
 - [ ] Fail
 
-### 4. Month Close With Summarized Actuals
+### 4. Actual Spend And Over-Budget Visibility
 
-**Purpose:** Confirm operators can enter summarized actuals and reconcile a month without importing transactions.
+**Purpose:** Confirm operators can enter simple actual-spend amounts and identify over-budget Budget Lines.
 
-**Interface to test from:** `Finance Admin` -> `Month Close`
+**Interface to test from:** `Budget Workspace` -> `Budget Overview`
 
 **Starting table:** `Budget Lines`
 
 **Setup data:**
 
-- Use an existing prior-month Budget Line.
-- Prepare a non-sensitive accounting reference.
+- Use an existing Budget Line with a Current Budget.
+- Do not enter transaction-level accounting records or bank data.
 
 **Steps:**
 
-1. Set `Close Status` to `Open`.
-2. Enter `Actual Spend`.
-3. Enter `Committed Amount` if applicable.
-4. Add `Accounting Reference`.
-5. Change `Close Status` to `Pending Reconciliation`.
-6. Fill `Reconciled Date` and `Reconciled By`.
-7. Change `Close Status` to `Reconciled`, then `Locked`.
+1. Enter an `Actual Spend` amount below `Current Budget`.
+2. Confirm `Over Budget Status` is `Within Budget`.
+3. Enter an `Actual Spend` amount above `Current Budget`.
+4. Confirm `Over Budget Status` is `Over Budget`.
+5. Open `AUTOMATION - Over Budget Lines`.
 
 **Expected result:**
 
-- `Available Budget`, `Variance Amount`, `Variance %`, and `Over Budget Status` calculate correctly.
-- The record can move through Open -> Pending Reconciliation -> Reconciled -> Locked.
+- `Over Budget Status` calculates from `Actual Spend > Current Budget`.
+- The over-budget line appears in `AUTOMATION - Over Budget Lines`.
 - No transaction-level accounting records or bank data are imported.
 
 **Result:**
@@ -289,48 +283,15 @@ Create or verify these table views before testing automations.
 
 - Active review items are included.
 - Completed compliance records are excluded.
-- The digest does not include Finance Notes, secure links, credentials, banking data, transaction-level data, or confidential attachments.
-- The automation does not update approval, payment, reconciliation, or lock statuses.
+- The digest does not include secure links, credentials, banking data, transaction-level data, or confidential attachments.
+- The automation does not update approval, payment, budget, or compliance statuses.
 
 **Result:**
 
 - [ ] Pass
 - [ ] Fail
 
-### 7. Monthly Close Reminder
-
-**Purpose:** Confirm the fifth-day reminder identifies unreconciled prior-month Budget Lines.
-
-**Interface to test from:** Airtable Automations and `AUTOMATION - Prior Month Open Close`
-
-**Starting table:** `Budget Lines`
-
-**Setup data:**
-
-- One prior-month Budget Line with `Close Status = Open`.
-- One prior-month Budget Line with `Close Status = Pending Reconciliation`.
-- One prior-month Budget Line with `Close Status = Reconciled`.
-- One prior-month Budget Line with `Close Status = Locked`.
-
-**Steps:**
-
-1. Open `AUTOMATION - Prior Month Open Close`.
-2. Confirm only Open and Pending Reconciliation records appear.
-3. Run or wait for `Finance - Monthly Close Reminder`.
-4. Review the reminder content.
-
-**Expected result:**
-
-- Only Open and Pending Reconciliation records are included.
-- Reconciled and Locked records are excluded.
-- The automation does not change `Actual Spend` or `Close Status`.
-
-**Result:**
-
-- [ ] Pass
-- [ ] Fail
-
-### 8. Privacy And No-Sync Guardrails
+### 7. Privacy And No-Sync Guardrails
 
 **Purpose:** Confirm Finance data stays private and does not leak into the Operations Hub.
 
@@ -370,8 +331,7 @@ Create or verify these table views before testing automations.
 | Finance request intake |  |  |
 | Budget plan and monthly lines |  |  |
 | Budget change approval |  |  |
-| Month close with summarized actuals |  |  |
+| Actual spend and over-budget visibility |  |  |
 | Compliance and renewals tracking |  |  |
 | Daily admin digest |  |  |
-| Monthly close reminder |  |  |
 | Privacy and no-sync guardrails |  |  |

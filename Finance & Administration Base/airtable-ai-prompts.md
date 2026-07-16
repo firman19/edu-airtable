@@ -12,7 +12,7 @@ Source of truth: [Finance & Administration Base requirements](README.md).
 Create or revise an Airtable base named "EDU Passport Finance & Administration".
 
 Purpose:
-This base is for basic Finance and Administration MVP work: finance requests, monthly budget planning, summarized actuals, budget changes, compliance, contracts, registrations, and renewals.
+This base is for basic Finance and Administration MVP work: finance requests, monthly budget planning, simple actual-spend visibility, budget changes, compliance, contracts, registrations, and renewals.
 
 Use exactly these tables:
 - Finance Requests
@@ -37,8 +37,8 @@ Base rules:
 - This is a private Finance MVP base. Do not place HR data in it.
 - Department is a controlled single select maintained locally.
 - Budget reporting currency is USD.
-- Accounting, banking, tax, and secure-document systems remain authoritative outside Airtable.
-- Store summarized monthly actuals, workflow data, references, and access-controlled URLs only.
+- Accounting integration is deferred; banking, tax, and secure-document systems remain authoritative outside Airtable.
+- Store planning data, simple actual-spend amounts, workflow data, references, and access-controlled URLs only.
 - Never store credentials, card data, API keys, unrestricted identity documents, payment attachments, payroll, bank details, or transaction-level accounting records.
 - Do not create cross-base synchronization.
 - If a specified table or field already exists, revise it instead of creating a duplicate.
@@ -69,7 +69,6 @@ Fields:
     {Budget Adjustment Amount},
     0
   )
-- Accounting Reference: single line text.
 - Secure Document URL: URL.
 
 Request behavior:
@@ -96,11 +95,7 @@ Fields:
 - Total Baseline Plan: rollup Budget Lines -> Baseline Planned Amount, SUM(values).
 - Total Approved Adjustments: rollup Budget Lines -> Approved Adjustments, SUM(values).
 - Total Current Budget: rollup Budget Lines -> Current Budget, SUM(values).
-- Total Committed: rollup Budget Lines -> Committed Amount, SUM(values).
 - Total Actual Spend: rollup Budget Lines -> Actual Spend, SUM(values).
-- Total Forecast: rollup Budget Lines -> Forecast Amount, SUM(values).
-- Total Available Budget: rollup Budget Lines -> Available Budget, SUM(values).
-- Total Variance: rollup Budget Lines -> Variance Amount, SUM(values).
 - Notes: long text.
 
 3. Budget Categories
@@ -111,7 +106,6 @@ Fields:
 - Category Code: unique single line text.
 - Category Group: controlled single select.
 - Active: checkbox.
-- Accounting Mapping: single line text.
 - Description: long text.
 - Sort Order: integer.
 
@@ -146,38 +140,21 @@ Fields:
 - Approved Adjustments: rollup Finance Requests -> Approved Adjustment Value, SUM(values).
 - Current Budget: currency formula:
   {Baseline Planned Amount} + {Approved Adjustments}
-- Committed Amount: USD currency.
 - Actual Spend: USD currency.
-- Forecast Amount: USD currency.
-- Available Budget: currency formula:
-  {Current Budget} - {Actual Spend} - {Committed Amount}
-- Variance Amount: currency formula:
-  {Current Budget} - {Actual Spend}
-- Variance %: percent formula:
-  IF(
-    {Current Budget} = 0,
-    BLANK(),
-    {Variance Amount} / {Current Budget}
-  )
 - Over Budget Status: formula:
   IF(
-    ({Actual Spend} + {Committed Amount}) > {Current Budget},
+    {Actual Spend} > {Current Budget},
     "Over Budget",
     "Within Budget"
   )
-- Close Status: single select: Open, Pending Reconciliation, Reconciled, Locked.
-- Accounting Reference: single line text.
-- Reconciled Date: date.
-- Reconciled By: collaborator.
 - Department Notes: long text.
-- Finance Notes: long text.
 
 Budget behavior:
 - Monthly Budget Lines are the source for quarterly, annual, and YTD reporting.
 - Do not create separate quarterly or annual budget amount fields or tables.
-- During the MVP, the approved internal operator group can maintain planning, forecasts, approvals, adjustments, commitments, actuals, reconciliation, locking, and internal notes.
+- During the MVP, the approved internal operator group can maintain planning, approvals, adjustments, actual-spend amounts, and notes.
 - Never overwrite an approved baseline. Use an approved Budget Change request.
-- Actual Spend is one summarized monthly Department x Category value reconciled to accounting.
+- Actual Spend is a simple operator-entered amount for basic budget visibility, not an authoritative accounting ledger value.
 
 5. Compliance & Renewals
 Use this table for contracts, registrations, licenses, insurance, tax filings, and other recurring obligations.
@@ -196,7 +173,7 @@ Create useful views without adding fields:
 - Finance Requests: Submitted / In Review, Budget Changes, Payment Related, Due Soon.
 - Budget Plans: Draft, Submitted, Approved / Active, Closed.
 - Budget Categories: Active, Inactive.
-- Budget Lines: Current Fiscal Year, Prior Month Open, Pending Reconciliation, Reconciled, Locked, Over Budget.
+- Budget Lines: Current Fiscal Year, Over Budget.
 - Compliance & Renewals: Upcoming, Overdue, In Progress / Waiting, Completed.
 
 Before finishing:
@@ -223,7 +200,7 @@ Keep the interface simple. Create only these pages:
 
 1. New Request
 Use the Finance Requests table.
-Create a form or simple entry page for new finance/admin requests.
+Create a form or simple entry page for all new finance/admin requests, including Budget Change requests.
 Show:
 - Request Type
 - Requester
@@ -234,6 +211,9 @@ Show:
 - Related Budget Line
 - Budget Adjustment Amount
 - Secure Document URL
+Behavior:
+- Use Related Budget Line and Budget Adjustment Amount only when Request Type is Budget Change.
+- Keep New Request as the single request intake page.
 
 2. Request List
 Use the Finance Requests table.
@@ -249,7 +229,6 @@ Show:
 - Due Date
 - Approval Status
 - Finance Owner
-- Accounting Reference
 
 3. Request Detail
 Create a record detail or record review page for Finance Requests.
@@ -266,22 +245,7 @@ Show:
 - Related Budget Line
 - Budget Adjustment Amount
 - Approved Adjustment Value
-- Accounting Reference
 - Secure Document URL
-
-4. Budget Change Request
-Use the Finance Requests table.
-Show requests where Request Type is Budget Change.
-Show:
-- Request ID
-- Approval Status
-- Related Budget Line
-- Budget Adjustment Amount
-- Approved Adjustment Value
-- Amount
-- Currency
-- Due Date
-- Finance Owner
 
 Interface behavior:
 - Approved internal operators should be able to create and update Finance Requests.
@@ -297,7 +261,7 @@ Interface behavior:
 Create or revise an interface named "Budget Workspace" for the Finance & Administration Base.
 
 Purpose:
-This interface is for approved internal operators to manage the basic MVP budget workflow: overview, planning, and budget changes.
+This interface is for approved internal operators to manage the basic MVP budget workflow: overview, planning, actual-spend entry, and budget changes.
 
 Use these tables:
 - Budget Plans
@@ -309,7 +273,7 @@ Keep the interface simple. Create only these pages:
 
 1. Budget Overview
 Use the Budget Lines and Budget Plans tables.
-Show approved and active budget summaries, monthly totals, YTD totals, variance, and over-budget lines.
+Show approved and active budget summaries, monthly totals, YTD totals, actual spend, and over-budget lines.
 Show:
 - Budget Plan
 - Department
@@ -320,17 +284,12 @@ Show:
 - Baseline Planned Amount
 - Approved Adjustments
 - Current Budget
-- Committed Amount
 - Actual Spend
-- Forecast Amount
-- Available Budget
-- Variance Amount
-- Variance %
 - Over Budget Status
 
 2. Budget Planning
 Use the Budget Plans and Budget Lines tables.
-Show planning and forecast records for the current fiscal year first.
+Show planning records for the current fiscal year first.
 Show:
 - Budget Plan Name
 - Department
@@ -340,7 +299,6 @@ Show:
 - Budget Category
 - Month
 - Baseline Planned Amount
-- Forecast Amount
 - Department Notes
 - Notes
 
@@ -360,7 +318,7 @@ Show:
 - Due Date
 
 Interface behavior:
-- Approved internal operators should be able to review and update budget planning, forecasts, notes, and Budget Change requests during the MVP.
+- Approved internal operators should be able to review and update budget planning, actual-spend amounts, notes, and Budget Change requests during the MVP.
 - Quarterly, annual, and YTD reporting should come from monthly Budget Lines.
 - Do not silently overwrite approved baselines; use Budget Change requests for post-approval changes.
 - Do not create separate quarterly or annual budget tables.
@@ -374,13 +332,12 @@ Interface behavior:
 Create or revise an interface named "Finance Admin" for the Finance & Administration Base.
 
 Purpose:
-This interface is for approved internal operators to handle basic request review, month close, compliance, and budget setup.
+This interface is for approved internal operators to handle basic request review, compliance, and budget setup.
 
 Use these tables:
 - Finance Requests
 - Budget Plans
 - Budget Categories
-- Budget Lines
 - Compliance & Renewals
 
 Keep the interface simple. Create only these pages:
@@ -398,25 +355,8 @@ Show:
 - Due Date
 - Approval Status
 - Finance Owner
-- Accounting Reference
 
-2. Month Close
-Use the Budget Lines table.
-Show records where Close Status is Open or Pending Reconciliation first.
-Show:
-- Budget Line Name
-- Department
-- Budget Category
-- Month
-- Actual Spend
-- Committed Amount
-- Accounting Reference
-- Close Status
-- Reconciled Date
-- Reconciled By
-- Finance Notes
-
-3. Compliance & Renewals
+2. Compliance & Renewals
 Use the Compliance & Renewals table.
 Show Upcoming, Overdue, In Progress, and Waiting records first.
 Show:
@@ -429,7 +369,7 @@ Show:
 - Last Completed Date
 - Secure Document URL
 
-4. Budget Setup
+3. Budget Setup
 Use the Budget Plans and Budget Categories tables.
 Show active setup records first.
 Show:
@@ -442,12 +382,10 @@ Show:
 - Category Code
 - Category Group
 - Active
-- Accounting Mapping
 - Sort Order
 
 Interface behavior:
-- Approved internal operators should be able to update request status, owner, due dates, monthly actuals, reconciliation status, compliance status, and budget setup records.
-- Month Close should support Open -> Pending Reconciliation -> Reconciled -> Locked.
+- Approved internal operators should be able to update request status, owner, due dates, compliance status, and budget setup records.
 - Never show or import transaction-level accounting records, bank data, credentials, payroll, unrestricted identity/legal documents, or payment attachments.
 - Do not create duplicate fields.
 - If a suggested field does not exist, skip it instead of creating a new field.
@@ -484,24 +422,12 @@ Digest behavior:
 - Include only record names, owner, department or category context, due date or month, status, amount fields needed for review, and record links.
 - Direct operators to handle records from Finance Admin and Budget Workspace.
 
-2. Finance - Monthly Close Reminder
-Schedule this automation monthly on the fifth calendar day at a documented approved time and timezone.
-
-Find Budget Lines where:
-- Month is in the immediately previous calendar month.
-- Close Status is Open or Pending Reconciliation.
-
-Reminder behavior:
-- Notify the Finance Owner when available, otherwise notify the designated fallback operator.
-- Include Budget Line Name, Department, Budget Category, Month, Close Status, Accounting Reference, and record link.
-- Ask operators to reconcile summarized actuals and move the line to Reconciled, then Locked.
-
 Automation behavior:
 - Use native Airtable automation actions only.
 - Do not use scripts or external integration tools.
-- Do not approve, reject, pay, reconcile, lock, or otherwise update records automatically.
-- Do not modify baseline, adjustment, commitment, actual, formula, rollup, or reconciliation fields automatically.
-- Do not include Finance Notes, Secure Document URL, bank data, transaction-level data, credentials, or confidential attachments in notifications.
+- Do not approve, reject, pay, or otherwise update records automatically.
+- Do not modify baseline, adjustment, actual, formula, or rollup fields automatically.
+- Do not include Secure Document URL, bank data, transaction-level data, credentials, or confidential attachments in notifications.
 - Do not create duplicate automations.
 ```
 
@@ -545,7 +471,6 @@ Check these items:
 - Do not store bank details, credentials, transaction-level accounting data, payment attachments, payroll, or unrestricted identity/legal documents.
 - Confirm there is no cross-base sync.
 - Test with non-sensitive sample records before enabling automations.
-- Reconcile one monthly Department x Category sample to accounting without importing transactions.
 - Confirm approved baselines cannot be silently overwritten.
 - Revisit role-specific permissions when a dedicated Finance owner or department exists.
 
