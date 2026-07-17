@@ -1,5 +1,28 @@
 # EDU Passport Finance & Administration
 
+## Executive Summary
+
+The Finance & Administration Base is the restricted Corporate Services workflow base for EDU Passport finance and company administration.
+
+It manages finance requests, USD budget planning, simple actual-spend visibility, compliance, contracts, renewals, and approval status without exposing sensitive finance details in the shared Operations Hub.
+
+Companion docs:
+
+- [Manual Test Scenarios](manual-test-scenarios.md)
+- [Airtable AI Prompts](airtable-ai-prompts.md)
+
+The base covers three operating areas:
+
+- finance request intake and review
+- monthly budget planning and budget-change tracking
+- compliance, contracts, registrations, renewals, and basic administration obligations
+
+The main operating rule is:
+
+**Airtable tracks workflow status and approved metadata. External systems remain authoritative for accounting, banking, tax, payroll, secure documents, and transaction ledgers.**
+
+This base should stay private and simple. It is not a replacement for accounting software, banking systems, payroll systems, tax filing systems, or secure document storage.
+
 ## Read Order
 
 1. Use this README as the source of truth for the base schema, permissions, workflows, and acceptance tests.
@@ -265,6 +288,63 @@ Capabilities:
 - Budget Setup maintains Budget Plans and Budget Categories.
 - Do not show or import transaction-level accounting records, bank data, credentials, payroll, unrestricted identity/legal documents, or payment attachments.
 
+## Workflow Diagram
+
+```mermaid
+flowchart LR
+    subgraph Requesters["Approved Internal Operators"]
+        R[Submit Finance Request]
+    end
+
+    subgraph Finance["Finance Admin"]
+        FR[Finance Requests]
+        Review[Review Request]
+        Outcome{Decision}
+    end
+
+    subgraph Budget["Budget Workspace"]
+        BP[Budget Plans]
+        BL[Monthly Budget Lines]
+        AS[Actual Spend]
+        BC[Budget Changes]
+        BV[Budget Visibility]
+    end
+
+    subgraph Compliance["Compliance"]
+        CR[Compliance & Renewals]
+        Due[Due and Overdue Obligations]
+    end
+
+    subgraph External["Authoritative External Systems"]
+        EXT[Accounting, Banking, Tax, Payroll, Secure Documents]
+    end
+
+    subgraph Ops["Operations Hub"]
+        OT[Sanitized Operations Task]
+    end
+
+    R --> FR
+    FR --> Review
+    Review --> Outcome
+    Outcome -->|Approve| A[Approved]
+    Outcome -->|Reject| RJ[Rejected]
+    Outcome -->|Pay| P[Paid]
+    Outcome -->|Close| CL[Closed or Cancelled]
+
+    BP --> BL
+    BL --> BV
+    AS --> BV
+    BC --> BV
+    FR -->|Budget Change request| BC
+
+    CR --> Due
+    Review -->|Cross-team action needed| OT
+    Due -->|Cross-team action needed| OT
+
+    FR -. references only .-> EXT
+    CR -. access-controlled links only .-> EXT
+```
+
 ## Workflow
 
 ```text
@@ -297,6 +377,37 @@ When Operations or another team must act, create a sanitized Operations Hub Task
 Launch without cross-base synchronization.
 
 Any later summary requires explicit approval and must be one-way, non-sensitive, and field-allowlisted. Do not sync department budget amounts, bank details, payment attachments, confidential notes, detailed transactions, restricted contracts, or tax records into the Operations Hub.
+
+## Scenario Coverage
+
+This section clarifies what the current Finance & Administration Base covers now and what remains outside the Airtable-only MVP.
+
+### Covered Now
+
+- Finance request intake for purchases, expenses, reimbursements, invoices, payments, budget changes, contracts, and other approved request types.
+- Request review, basic approval status, Finance Owner assignment, due dates, and payment-status tracking.
+- USD budget planning through Budget Plans, Budget Categories, and monthly Budget Lines.
+- Quarterly, annual, and YTD budget reporting derived from monthly Budget Lines.
+- Controlled budget changes through approved Budget Change requests.
+- Simple actual-spend visibility, current-budget calculation, and over-budget review.
+- Compliance, registration, insurance, contract, tax, filing, and renewal tracking.
+- Sanitized Operations Hub handoff when another team must act without seeing restricted finance details.
+
+### Partially Covered Now
+
+- Department-wide budget visibility and role-based review are structurally supported, but final visibility depends on actual Airtable base, interface, and permission configuration.
+- Actual Spend supports simple manual visibility only. It is not an accounting sync and does not reconcile transaction-level records.
+
+### Not Covered Or Deferred
+
+- Transaction-level accounting records.
+- Authoritative bank records, banking credentials, full card data, or payment attachments.
+- Payroll processing or payroll source-of-truth records.
+- Secure document storage inside Airtable.
+- Accounting, banking, tax, payroll, or secure-document integrations.
+- Tax or accounting source-of-truth workflows.
+- Cross-base synchronization into the Operations Hub.
+- Unrestricted Finance visibility for general staff.
 
 ## Acceptance Tests
 

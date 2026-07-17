@@ -1,5 +1,28 @@
 # EDU Passport People & HR
 
+## Executive Summary
+
+The People & HR Base is the restricted Corporate Services workflow base for EDU Passport employee lifecycle administration and confidential HR work.
+
+It manages HR requests, recruitment, onboarding, offboarding, leave, document requests, employee changes, and confidential cases without exposing employee records or case details in the shared Operations Hub.
+
+Companion docs:
+
+- [Manual Test Scenarios](manual-test-scenarios.md)
+- [Airtable AI Prompts](airtable-ai-prompts.md)
+
+The base covers three operating areas:
+
+- restricted employee lifecycle context
+- HR request intake and triage
+- confidential HR administration, approvals, and completion tracking
+
+The main operating rule is:
+
+**Airtable tracks HR workflow status and approved operational metadata. Payroll, HRIS, secure document systems, compensation records, and sensitive identity documents remain authoritative outside Airtable.**
+
+This base should stay private and limited. It is not a general employee directory, payroll system, HRIS replacement, or secure document vault.
+
 ## Read Order
 
 1. Use this README as the source of truth for the base schema, permissions, workflows, and acceptance tests.
@@ -98,6 +121,51 @@ Capabilities:
 - Update approvals and completion status
 - Open access-controlled source-system or document links
 
+## Workflow Diagram
+
+```mermaid
+flowchart LR
+    subgraph Portal["HR Request Portal"]
+        EM[Employee or Manager]
+        SUB[Submit HR Request]
+    end
+
+    subgraph HR["HR Administration"]
+        REQ[HR Requests]
+        TRIAGE[Triage and Assign Owner / Due Date]
+        REVIEW[Review Request]
+        OUTCOME{Decision}
+    end
+
+    subgraph Context["Restricted HR Context"]
+        EMP[Employees]
+    end
+
+    subgraph External["Authoritative External Systems"]
+        EXT[Payroll, HRIS, Secure Documents]
+    end
+
+    subgraph Ops["Operations Hub"]
+        OT[Sanitized Operations Task]
+    end
+
+    EM --> SUB
+    SUB --> REQ
+    REQ --> TRIAGE
+    EMP --> TRIAGE
+    TRIAGE --> REVIEW
+    REVIEW --> OUTCOME
+
+    OUTCOME -->|Approve| A[Approved]
+    OUTCOME -->|Reject| RJ[Rejected]
+    OUTCOME -->|Complete| C[Completed]
+    OUTCOME -->|Cancel| CA[Cancelled]
+
+    REVIEW -. source-system action .-> EXT
+    REQ -. access-controlled links only .-> EXT
+    REVIEW -->|Another team must act| OT
+```
+
 ## Workflow
 
 ```text
@@ -115,6 +183,35 @@ When Operations, IT, or another team must act, create a sanitized Operations Hub
 Launch without cross-base synchronization.
 
 Any later summary requires explicit approval and must be one-way, non-sensitive, and field-allowlisted. Do not sync employee names tied to cases, compensation, performance or medical data, confidential notes, or identity documents into the Operations Hub.
+
+## Scenario Coverage
+
+This section clarifies what the current People & HR Base covers now and what remains outside the Airtable-only MVP.
+
+### Covered Now
+
+- Employee lifecycle status for candidates, active employees, leave, exiting employees, and former employees.
+- HR request intake for recruitment, onboarding, offboarding, leave, employee documents, employee changes, confidential cases, and other approved request types.
+- HR triage, HR Owner assignment, due dates, request priority, approvals, rejection, completion, and cancellation status.
+- Restricted HR administration for HR and approved leadership.
+- Confidential Notes and Secure Document URL fields for controlled HR context and external document references.
+- Sanitized Operations Hub handoff when Operations, IT, or another team must act without seeing employee case details.
+
+### Partially Covered Now
+
+- Employee self-service visibility and manager or requester access are structurally supported, but exact restrictions depend on Airtable plan, interface, and permission configuration.
+- Manager references are supported as operational metadata, but may be implemented as either text or collaborator fields depending on the actual Airtable setup.
+
+### Not Covered Or Deferred
+
+- Payroll calculations or payroll source-of-truth records.
+- Authoritative compensation records.
+- Full HRIS replacement.
+- Unrestricted employee directory access.
+- Full identity document storage or confidential attachment storage inside Airtable.
+- Banking credentials, passwords, API keys, or sensitive identity documents.
+- Cross-base synchronization into the Operations Hub.
+- HR case data, compensation data, performance data, medical data, or confidential notes in the Operations Hub.
 
 ## Acceptance Tests
 
