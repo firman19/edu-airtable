@@ -110,76 +110,90 @@ AI & Automation uses shared `Projects` and `Tasks` for company-wide AI, automati
 
 Do not store credentials, API keys, passwords, source-system secrets, or restricted implementation details in Airtable.
 
-## Workflow Diagram
+## Operational Base Diagram
 
 ```mermaid
 flowchart LR
-    subgraph Strategy["Planning"]
+    subgraph Core["Core Planning And Execution"]
         D[Departments]
         R[Roadmaps]
         P[Projects]
-    end
-
-    subgraph Execution["Shared Execution"]
         T[Tasks]
-        MT[My Tasks]
-        EX[Executive Dashboard]
-        RP[Roadmap & Projects]
     end
 
-    subgraph Product["Product"]
+    subgraph Product["Product Workflow"]
         PR[Product Requests]
         BUG[Bugs & Issues]
         QA[QA & Testing]
         REL[Releases]
         CL[Changelog]
+        SPR[Sprints]
     end
 
-    subgraph Marketing["Marketing"]
+    subgraph Marketing["Marketing And Creative"]
         CAM[Campaigns]
         CON[Content]
         CR[Creative Requests]
     end
 
-    subgraph OpsAI["Operations and AI"]
-        CARE[Care Dept]
-        MKT[Marketing Dept]
-        PROD[Product Dept]
-        AID[AI & Automation Dept]
+    subgraph DeptInterfaces["Department Interfaces"]
+        MKTIF[Marketing Dept]
+        PRODIF[Product Dept]
+        CAREIF[Care Dept]
+        AIIF[AI & Automation Dept]
     end
 
-    subgraph ExternalBases["Dedicated Bases"]
-        CS[Care & Sales Base]
-        HR[People & HR Base]
-        FIN[Finance & Administration Base]
+    subgraph SharedInterfaces["Shared Interfaces"]
+        EX[Executive Dashboard]
+        MT[My Tasks]
+        RP[Roadmap & Projects]
+    end
+
+    subgraph Intake["Submission And Visibility"]
+        PRS[Product Request Submission]
+        CRS[Creative Request Submission]
+        BUGR[Bug Reporting]
+        REVI[Releases]
     end
 
     D --> R
     R --> P
     P --> T
+
+    D --> RP
+    R --> RP
+    P --> RP
     T --> MT
     T --> EX
-    P --> RP
 
+    PRS --> PR
     PR --> P
     PR --> T
+    BUGR --> BUG
     BUG --> T
     T --> QA
+    SPR --> T
     QA --> REL
     REL --> CL
+    REL --> REVI
 
+    CRS --> CR
     CAM --> T
     CON --> T
     CR --> T
 
-    CARE --> T
-    MKT --> T
-    PROD --> T
-    AID --> T
-
-    CS -. sanitized handoff only .-> T
-    HR -. sanitized handoff only .-> T
-    FIN -. sanitized handoff only .-> T
+    MKTIF --> T
+    MKTIF --> CAM
+    MKTIF --> CR
+    PRODIF --> T
+    PRODIF --> PR
+    PRODIF --> BUG
+    PRODIF --> QA
+    PRODIF --> REL
+    PRODIF --> CL
+    PRODIF --> SPR
+    CAREIF --> T
+    AIIF --> T
 ```
 
 ## Current Status
